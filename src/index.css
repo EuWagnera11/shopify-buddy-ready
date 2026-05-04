@@ -2,60 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 5%;
-    --foreground: 42 35% 88%;
+    --background: 0 0% 100%;
+    --foreground: 155 30% 12%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 42 35% 88%;
+    --card: 0 0% 100%;
+    --card-foreground: 155 30% 12%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 42 35% 88%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 30% 12%;
 
-    --primary: 42 55% 55%;
-    --primary-foreground: 0 0% 5%;
+    --primary: 152 60% 32%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 42 35% 88%;
+    --secondary: 150 30% 96%;
+    --secondary-foreground: 155 30% 12%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 42 15% 65%;
+    --muted: 150 20% 96%;
+    --muted-foreground: 155 10% 42%;
 
-    --accent: 42 65% 60%;
-    --accent-foreground: 0 0% 5%;
+    --accent: 150 50% 92%;
+    --accent-foreground: 152 60% 22%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 42 25% 18%;
-    --input: 0 0% 14%;
-    --ring: 42 55% 55%;
+    --border: 150 15% 90%;
+    --input: 0 0% 100%;
+    --ring: 152 60% 32%;
 
-    --radius: 0.25rem;
+    --radius: 0.5rem;
 
-    --gold: 42 55% 55%;
-    --gold-light: 42 70% 70%;
-    --gold-dark: 42 60% 35%;
+    --brand: 152 60% 32%;
+    --brand-light: 150 50% 92%;
+    --brand-dark: 155 65% 22%;
+    --brand-banner: 152 55% 38%;
 
-    --gradient-gold: linear-gradient(135deg, hsl(42 60% 40%) 0%, hsl(42 75% 70%) 50%, hsl(42 55% 45%) 100%);
-    --gradient-gold-text: linear-gradient(135deg, hsl(42 75% 75%), hsl(42 60% 50%), hsl(42 80% 80%));
-    --gradient-dark: linear-gradient(180deg, hsl(0 0% 3%), hsl(0 0% 8%));
-    --gradient-overlay: linear-gradient(180deg, hsl(0 0% 0% / 0.2), hsl(0 0% 0% / 0.85));
+    --gradient-brand: linear-gradient(135deg, hsl(152 60% 32%), hsl(150 65% 28%));
+    --gradient-soft: linear-gradient(180deg, hsl(150 50% 97%), hsl(0 0% 100%));
 
-    --shadow-gold: 0 10px 40px -10px hsl(42 60% 50% / 0.4);
-    --shadow-luxury: 0 20px 60px -20px hsl(0 0% 0% / 0.8);
+    --shadow-card: 0 4px 16px -8px hsl(155 30% 20% / 0.08);
+    --shadow-elevated: 0 10px 30px -12px hsl(155 30% 20% / 0.18);
 
-    --sidebar-background: 0 0% 6%;
-    --sidebar-foreground: 42 35% 88%;
-    --sidebar-primary: 42 55% 55%;
-    --sidebar-primary-foreground: 0 0% 5%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 42 35% 88%;
-    --sidebar-border: 42 25% 18%;
-    --sidebar-ring: 42 55% 55%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 155 30% 12%;
+    --sidebar-primary: 152 60% 32%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 30% 96%;
+    --sidebar-accent-foreground: 155 30% 12%;
+    --sidebar-border: 150 15% 90%;
+    --sidebar-ring: 152 60% 32%;
   }
 }
 
@@ -67,25 +66,21 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
   h1, h2, h3, h4 {
-    @apply font-serif tracking-tight;
+    @apply font-display tracking-tight;
   }
 }
 
 @layer utilities {
-  .text-gold-gradient {
-    background: var(--gradient-gold-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+  .bg-brand-gradient {
+    background: var(--gradient-brand);
   }
-  .bg-gold-gradient {
-    background: var(--gradient-gold);
+  .bg-soft-gradient {
+    background: var(--gradient-soft);
   }
-  .shadow-gold {
-    box-shadow: var(--shadow-gold);
+  .shadow-card {
+    box-shadow: var(--shadow-card);
   }
-  .shadow-luxury {
-    box-shadow: var(--shadow-luxury);
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
   }
 }

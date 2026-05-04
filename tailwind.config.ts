@@ -59,13 +59,12 @@ export default {
         },
       },
       fontFamily: {
-        serif: ['"Cormorant Garamond"', 'serif'],
         sans: ['Inter', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
       },
       backgroundImage: {
-        'gold-gradient': 'var(--gradient-gold)',
-        'dark-gradient': 'var(--gradient-dark)',
-        'overlay-gradient': 'var(--gradient-overlay)',
+        'brand-gradient': 'var(--gradient-brand)',
+        'soft-gradient': 'var(--gradient-soft)',
       },
       borderRadius: {
         lg: "var(--radius)",
