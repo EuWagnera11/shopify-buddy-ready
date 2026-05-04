@@ -15,46 +15,47 @@
     --popover: 0 0% 100%;
     --popover-foreground: 40 25% 12%;
 
-    --primary: 36 62% 42%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 38 60% 48%;
+    --primary-foreground: 40 30% 8%;
 
-    --secondary: 36 38% 95%;
-    --secondary-foreground: 30 30% 14%;
+    --secondary: 40 35% 95%;
+    --secondary-foreground: 35 35% 14%;
 
-    --muted: 36 25% 95%;
-    --muted-foreground: 32 12% 40%;
+    --muted: 40 25% 95%;
+    --muted-foreground: 35 12% 38%;
 
-    --accent: 36 55% 86%;
-    --accent-foreground: 32 65% 26%;
+    --accent: 42 70% 82%;
+    --accent-foreground: 35 65% 24%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 36 25% 86%;
+    --border: 40 30% 84%;
     --input: 0 0% 100%;
-    --ring: 36 62% 42%;
+    --ring: 38 60% 48%;
 
     --radius: 0.5rem;
 
-    --brand: 36 62% 42%;
-    --brand-light: 36 55% 86%;
-    --brand-dark: 30 65% 28%;
-    --brand-banner: 36 60% 46%;
+    --brand: 38 60% 48%;
+    --brand-light: 45 80% 78%;
+    --brand-dark: 32 65% 26%;
+    --brand-banner: 40 65% 50%;
 
-    --gradient-brand: linear-gradient(135deg, hsl(40 70% 52%) 0%, hsl(34 68% 42%) 50%, hsl(28 60% 30%) 100%);
-    --gradient-soft: linear-gradient(180deg, hsl(36 50% 96%), hsl(0 0% 100%));
+    /* Gold metallic gradient — highlight → core gold → deep bronze */
+    --gradient-brand: linear-gradient(135deg, hsl(45 85% 72%) 0%, hsl(40 70% 55%) 30%, hsl(35 65% 42%) 65%, hsl(30 60% 26%) 100%);
+    --gradient-soft: linear-gradient(180deg, hsl(42 60% 96%), hsl(0 0% 100%));
 
     --shadow-card: 0 4px 16px -8px hsl(40 30% 20% / 0.10);
     --shadow-elevated: 0 10px 30px -12px hsl(40 30% 20% / 0.20);
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 40 25% 12%;
-    --sidebar-primary: 36 62% 42%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 36 38% 95%;
-    --sidebar-accent-foreground: 30 30% 14%;
-    --sidebar-border: 36 25% 86%;
-    --sidebar-ring: 36 62% 42%;
+    --sidebar-primary: 38 60% 48%;
+    --sidebar-primary-foreground: 40 30% 8%;
+    --sidebar-accent: 40 35% 95%;
+    --sidebar-accent-foreground: 35 35% 14%;
+    --sidebar-border: 40 30% 84%;
+    --sidebar-ring: 38 60% 48%;
   }
 }
 
