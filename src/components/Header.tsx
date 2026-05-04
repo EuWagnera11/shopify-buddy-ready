@@ -1,31 +1,29 @@
 import { Link, useLocation } from "react-router-dom";
 import { ShoppingBag, Menu, Search, X, User } from "lucide-react";
-import { useCart } from "@/context/CartContext";
+import { useCartStore, useCartCount } from "@/stores/cartStore";
 import logo from "@/assets/logo.png";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 const nav = [
   { to: "/", label: "Início" },
-  { to: "/produtos", label: "Cosmético" },
-  { to: "/produtos", label: "Farmacêutico" },
-  { to: "/produtos", label: "Linha Profissional" },
-  { to: "/produtos", label: "Sustentáveis" },
+  { to: "/produtos", label: "Produtos" },
+  { to: "/sobre", label: "Sobre" },
+  { to: "/contato", label: "Contato" },
 ];
 
 export const Header = () => {
-  const { count, setOpen } = useCart();
+  const setOpen = useCartStore((s) => s.setOpen);
+  const count = useCartCount();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border">
-      {/* Top promo bar */}
       <div className="bg-brand-gradient text-primary-foreground text-center text-xs py-2 px-4">
         Use o cupom <strong className="font-semibold">BEMVINDO10</strong> e ganhe 10% OFF na primeira compra
       </div>
 
-      {/* Main bar */}
       <div className="container flex h-20 items-center gap-6">
         <Link to="/" className="flex items-center gap-3 shrink-0">
           <img src={logo} alt="Gold Embalagens" className="h-12 w-auto" />
@@ -75,7 +73,6 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Categories nav */}
       <nav className="hidden md:block border-t border-border">
         <div className="container flex items-center gap-8 h-12">
           {nav.map((item, i) => (
@@ -90,9 +87,6 @@ export const Header = () => {
               {item.label}
             </Link>
           ))}
-          <Link to="/produtos" className="ml-auto text-sm font-semibold text-destructive hover:underline">
-            Outlet
-          </Link>
         </div>
       </nav>
 
