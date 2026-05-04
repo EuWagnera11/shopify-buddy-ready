@@ -1,5 +1,5 @@
 import { Layout } from "@/components/Layout";
-import { useParams, Link, Navigate, useNavigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import { formatBRL } from "@/lib/format";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
@@ -13,7 +13,6 @@ import { useSEO } from "@/hooks/useSEO";
 
 const ProductDetail = () => {
   const { handle } = useParams();
-  const navigate = useNavigate();
   const { data: product, isLoading } = useShopifyProduct(handle);
   const { data: allProducts = [] } = useShopifyProducts();
   const addItem = useCartStore((s) => s.addItem);
