@@ -1,6 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Menu, Search, X, User } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ShoppingBag, Menu, Search, X, User, Heart } from "lucide-react";
 import { useCartStore, useCartCount } from "@/stores/cartStore";
+import { useWishlistCount } from "@/stores/wishlistStore";
 import logo from "@/assets/logo.png";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils";
 const nav = [
   { to: "/", label: "Início" },
   { to: "/produtos", label: "Produtos" },
+  { to: "/favoritos", label: "Favoritos" },
   { to: "/sobre", label: "Sobre" },
   { to: "/contato", label: "Contato" },
 ];
@@ -15,13 +17,22 @@ const nav = [
 export const Header = () => {
   const setOpen = useCartStore((s) => s.setOpen);
   const count = useCartCount();
+  const wishCount = useWishlistCount();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const onSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!search.trim()) return;
+    navigate(`/produtos?q=${encodeURIComponent(search.trim())}`);
+  };
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border">
       <div className="bg-brand-gradient text-primary-foreground text-center text-xs py-2 px-4">
-        Use o cupom <strong className="font-semibold">BEMVINDO10</strong> e ganhe 10% OFF na primeira compra
+        Use o cupom <strong className="font-semibold">BEMVINDO10</strong> e ganhe 10% OFF na primeira compra · Frete grátis acima de R$ 299
       </div>
 
       <div className="container flex h-20 items-center gap-6">
@@ -29,18 +40,34 @@ export const Header = () => {
           <img src={logo} alt="Gold Embalagens" className="h-12 w-auto" />
         </Link>
 
-        <div className="flex-1 hidden md:flex">
+        <form onSubmit={onSearch} className="flex-1 hidden md:flex">
           <div className="relative w-full max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="search"
-              placeholder="Olá, o que você procura?"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Buscar frascos, potes, bisnagas…"
               className="w-full bg-secondary/60 border border-border rounded-full pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-primary focus:bg-background transition-colors"
             />
           </div>
-        </div>
+        </form>
 
         <div className="flex items-center gap-1">
+          <Link
+            to="/favoritos"
+            className="hidden md:flex items-center gap-2 px-3 py-2 rounded-md hover:bg-secondary transition-colors text-sm relative"
+            aria-label="Favoritos"
+          >
+            <div className="relative">
+              <Heart className="h-5 w-5 text-primary" />
+              {wishCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                  {wishCount}
+                </span>
+              )}
+            </div>
+          </Link>
           <Link
             to="/contato"
             className="hidden md:flex items-center gap-2 px-3 py-2 rounded-md hover:bg-secondary transition-colors text-sm"
@@ -92,7 +119,19 @@ export const Header = () => {
 
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-background">
-          <nav className="container flex flex-col py-4">
+          <form onSubmit={onSearch} className="container py-3">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar…"
+                className="w-full bg-secondary/60 border border-border rounded-full pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:border-primary"
+              />
+            </div>
+          </form>
+          <nav className="container flex flex-col pb-4">
             {nav.map((item, i) => (
               <Link
                 key={i}
