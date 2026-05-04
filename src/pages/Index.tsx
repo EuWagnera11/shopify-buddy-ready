@@ -1,119 +1,136 @@
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/data/products";
+import { products, categories } from "@/data/products";
 import hero from "@/assets/hero.jpg";
-import { ArrowRight, Sparkles, Shield, Truck } from "lucide-react";
+import { ArrowRight, Leaf, Beaker, Sparkles, SprayCan } from "lucide-react";
+
+const categoryIcons: Record<string, typeof Leaf> = {
+  "Cosmético": Sparkles,
+  "Farmacêutico": Beaker,
+  "Linha Profissional": SprayCan,
+  "Sustentáveis": Leaf,
+};
 
 const Index = () => {
   const featured = products.filter((p) => p.featured);
+  const navCats = categories.filter((c) => c !== "Todos");
 
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative h-[88vh] min-h-[600px] flex items-center overflow-hidden">
-        <img
-          src={hero}
-          alt="Embalagens douradas premium"
-          width={1600}
-          height={1024}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-overlay-gradient" />
-        <div className="container relative z-10 max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.4em] text-primary mb-6">
-            Coleção 2026 · Edição Aurum
-          </p>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[0.95] mb-6">
-            <span className="text-gold-gradient">Embalagens</span>
-            <br />
-            que vestem o luxo.
-          </h1>
-          <p className="text-lg text-foreground/80 max-w-xl mb-10 leading-relaxed">
-            Frascos, potes e tubos dourados desenhados para marcas de perfumaria
-            e cosméticos que não aceitam menos do que extraordinário.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link
-              to="/produtos"
-              className="group inline-flex items-center gap-3 bg-gold-gradient px-8 py-4 text-xs uppercase tracking-[0.3em] text-primary-foreground font-semibold hover:opacity-90 transition-opacity shadow-gold"
-            >
-              Explorar coleção
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              to="/sobre"
-              className="inline-flex items-center px-8 py-4 text-xs uppercase tracking-[0.3em] border border-border hover:border-primary hover:text-primary transition-colors"
-            >
-              Nossa história
-            </Link>
+      <section className="relative bg-soft-gradient overflow-hidden">
+        <div className="container grid md:grid-cols-2 gap-8 items-center py-12 md:py-20">
+          <div>
+            <span className="inline-block bg-accent text-primary text-xs font-semibold px-4 py-1.5 rounded-full mb-5">
+              Lançamento · Linha 2026
+            </span>
+            <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05] mb-5 text-foreground">
+              Embalagens para cada{" "}
+              <span className="text-primary">segmento</span> do seu negócio.
+            </h1>
+            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg">
+              Frascos, potes, bisnagas e tampas para cosmético, farmacêutico e linha profissional.
+              Compre a partir de 1 unidade.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/produtos"
+                className="group inline-flex items-center gap-2 bg-brand-gradient px-7 py-3.5 rounded-full text-sm font-semibold text-primary-foreground hover:opacity-90 shadow-elevated"
+              >
+                Ver catálogo
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                to="/sobre"
+                className="inline-flex items-center px-7 py-3.5 rounded-full text-sm font-semibold border border-border bg-background hover:border-primary hover:text-primary"
+              >
+                Sobre a marca
+              </Link>
+            </div>
+          </div>
+          <div className="relative">
+            <img
+              src={hero}
+              alt="Embalagens cosméticas e farmacêuticas"
+              width={1600}
+              height={900}
+              className="w-full rounded-2xl shadow-elevated object-cover aspect-[4/3]"
+            />
           </div>
         </div>
       </section>
 
-      {/* Benefits */}
-      <section className="border-y border-border bg-secondary/20">
-        <div className="container grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
-          {[
-            { icon: Sparkles, title: "Acabamento Premium", desc: "Acabamentos dourados de alta durabilidade" },
-            { icon: Shield, title: "Qualidade Garantida", desc: "Controle artesanal em cada peça" },
-            { icon: Truck, title: "Envio Nacional", desc: "Entrega para todo o Brasil" },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="py-8 px-6 flex items-center gap-4">
-              <Icon className="h-8 w-8 text-primary shrink-0" strokeWidth={1.2} />
-              <div>
-                <h3 className="font-serif text-lg">{title}</h3>
-                <p className="text-sm text-muted-foreground">{desc}</p>
-              </div>
-            </div>
-          ))}
+      {/* Categories */}
+      <section className="container py-16">
+        <div className="text-center mb-10">
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">Compre por segmento</h2>
+          <p className="text-muted-foreground">Encontre a embalagem certa para o seu produto</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {navCats.map((cat) => {
+            const Icon = categoryIcons[cat] || Sparkles;
+            return (
+              <Link
+                key={cat}
+                to="/produtos"
+                className="group bg-secondary/50 hover:bg-accent border border-border rounded-xl p-6 text-center transition-all hover:shadow-card hover:-translate-y-1"
+              >
+                <div className="h-14 w-14 mx-auto mb-3 rounded-full bg-background flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <Icon className="h-7 w-7 text-primary group-hover:text-primary-foreground" strokeWidth={1.6} />
+                </div>
+                <h3 className="font-semibold text-sm">{cat}</h3>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
       {/* Featured */}
-      <section className="container py-24">
-        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
+      <section className="container py-12">
+        <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-3">Selecionados</p>
-            <h2 className="font-serif text-4xl md:text-5xl">Em destaque</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold">Lançamentos</h2>
+            <p className="text-muted-foreground mt-1">Os produtos mais procurados da semana</p>
           </div>
           <Link
             to="/produtos"
-            className="text-xs uppercase tracking-[0.25em] hover:text-primary inline-flex items-center gap-2 group"
+            className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1 group"
           >
-            Ver tudo <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+            Ver todos <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {featured.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </section>
 
-      {/* Editorial */}
-      <section className="container pb-24">
-        <div className="grid md:grid-cols-2 gap-12 items-center bg-secondary/30 p-8 md:p-16">
+      {/* Banner CTA */}
+      <section className="container py-16">
+        <div className="grid md:grid-cols-2 gap-8 items-center bg-brand-gradient rounded-2xl p-8 md:p-14 text-primary-foreground overflow-hidden">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4">Manifesto</p>
-            <h2 className="font-serif text-4xl md:text-5xl mb-6 leading-tight">
-              O ouro <span className="text-gold-gradient">não é um material.</span> É uma intenção.
+            <span className="inline-block bg-white/15 text-xs font-semibold px-3 py-1 rounded-full mb-4">
+              Linha sustentável
+            </span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 leading-tight">
+              Embalagens que respeitam o planeta.
             </h2>
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              Cada embalagem é pensada para ser parte da narrativa do produto.
-              Trabalhamos com fornecedores selecionados e processos artesanais
-              para entregar peças que elevam marcas premium a um novo patamar.
+            <p className="opacity-90 mb-6 max-w-md">
+              Conheça nossa linha de embalagens recicláveis e biodegradáveis, ideais para marcas
+              que valorizam o impacto ambiental.
             </p>
             <Link
-              to="/sobre"
-              className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.25em] text-primary group"
+              to="/produtos"
+              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-full hover:bg-white/90"
             >
-              Conheça o estúdio
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              Explorar linha eco
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="aspect-square overflow-hidden">
-            <img src={hero} alt="Estúdio Gold" className="h-full w-full object-cover" loading="lazy" />
+          <div className="hidden md:block">
+            <Leaf className="h-48 w-48 opacity-20 ml-auto" strokeWidth={1} />
           </div>
         </div>
       </section>
