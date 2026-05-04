@@ -20,9 +20,9 @@ const Checkout = () => {
     return (
       <Layout>
         <section className="container py-32 text-center">
-          <h1 className="font-serif text-4xl mb-4">Carrinho vazio</h1>
+          <h1 className="font-display text-4xl mb-4">Carrinho vazio</h1>
           <p className="text-muted-foreground mb-8">Adicione produtos antes de finalizar.</p>
-          <Link to="/produtos" className="inline-block bg-gold-gradient px-8 py-4 text-xs uppercase tracking-[0.25em] text-primary-foreground">
+          <Link to="/produtos" className="inline-block bg-brand-gradient px-8 py-4 text-xs uppercase tracking-[0.25em] text-primary-foreground">
             Explorar coleção
           </Link>
         </section>
@@ -33,17 +33,17 @@ const Checkout = () => {
   return (
     <Layout>
       <section className="container py-16 max-w-6xl">
-        <h1 className="font-serif text-4xl md:text-5xl mb-12">Checkout</h1>
+        <h1 className="font-display text-4xl md:text-5xl mb-12">Checkout</h1>
 
         <div className="grid lg:grid-cols-[1fr_400px] gap-12">
           <form onSubmit={handleSubmit} className="space-y-10">
             <div>
-              <h2 className="font-serif text-2xl mb-6 pb-3 border-b border-border">Contato</h2>
+              <h2 className="font-display text-2xl mb-6 pb-3 border-b border-border">Contato</h2>
               <input type="email" required placeholder="E-mail" className="w-full bg-input border border-border px-4 py-3 focus:outline-none focus:border-primary" />
             </div>
 
             <div>
-              <h2 className="font-serif text-2xl mb-6 pb-3 border-b border-border">Entrega</h2>
+              <h2 className="font-display text-2xl mb-6 pb-3 border-b border-border">Entrega</h2>
               <div className="grid md:grid-cols-2 gap-3">
                 <input required placeholder="Nome" className="bg-input border border-border px-4 py-3 focus:outline-none focus:border-primary" />
                 <input required placeholder="Sobrenome" className="bg-input border border-border px-4 py-3 focus:outline-none focus:border-primary" />
@@ -54,26 +54,26 @@ const Checkout = () => {
             </div>
 
             <div>
-              <h2 className="font-serif text-2xl mb-6 pb-3 border-b border-border">Pagamento</h2>
+              <h2 className="font-display text-2xl mb-6 pb-3 border-b border-border">Pagamento</h2>
               <div className="bg-secondary/40 border border-border p-6 text-sm text-muted-foreground flex items-center gap-3">
                 <Lock className="h-4 w-4 text-primary" />
                 Pagamento processado via Shopify Checkout (integração pendente).
               </div>
             </div>
 
-            <button className="w-full bg-gold-gradient text-primary-foreground py-5 uppercase tracking-[0.3em] text-xs font-semibold hover:opacity-90 transition-opacity shadow-gold">
+            <button className="w-full bg-brand-gradient text-primary-foreground py-5 uppercase tracking-[0.3em] text-xs font-semibold hover:opacity-90 transition-opacity shadow-elevated">
               Finalizar pedido · {formatBRL(total)}
             </button>
           </form>
 
           <aside className="bg-secondary/30 p-6 h-fit lg:sticky lg:top-28">
-            <h2 className="font-serif text-xl mb-6">Resumo</h2>
+            <h2 className="font-display text-xl mb-6">Resumo</h2>
             <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto">
               {items.map((i) => (
                 <div key={i.product.id} className="flex gap-3">
                   <div className="relative">
                     <img src={i.product.image} alt={i.product.title} className="h-16 w-14 object-cover bg-background" />
-                    <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-gold-gradient text-primary-foreground text-[10px] flex items-center justify-center font-semibold">
+                    <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-brand-gradient text-primary-foreground text-[10px] flex items-center justify-center font-semibold">
                       {i.quantity}
                     </span>
                   </div>

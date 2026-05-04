@@ -5,8 +5,8 @@ const About = () => (
   <Layout>
     <section className="container py-20 max-w-4xl">
       <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4">Estúdio Gold</p>
-      <h1 className="font-serif text-5xl md:text-6xl mb-8 leading-tight">
-        Feito para marcas que <span className="text-gold-gradient">recusam o comum.</span>
+      <h1 className="font-display text-5xl md:text-6xl mb-8 leading-tight">
+        Feito para marcas que <span className="text-primary">recusam o comum.</span>
       </h1>
       <p className="text-lg text-muted-foreground leading-relaxed mb-12">
         Há mais de uma década criamos embalagens douradas para perfumaria fina,
@@ -21,7 +21,7 @@ const About = () => (
           { n: "100%", l: "Controle de qualidade" },
         ].map((s) => (
           <div key={s.l} className="text-center md:text-left">
-            <p className="font-serif text-5xl text-gold-gradient mb-2">{s.n}</p>
+            <p className="font-display text-5xl text-primary mb-2">{s.n}</p>
             <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">{s.l}</p>
           </div>
         ))}
