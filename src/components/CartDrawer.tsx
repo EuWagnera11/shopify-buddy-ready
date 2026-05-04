@@ -22,6 +22,9 @@ export const CartDrawer = () => {
   };
 
   const currency = items[0]?.price.currencyCode || "BRL";
+  const FREE_SHIPPING_THRESHOLD = 299;
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+  const progress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
 
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
