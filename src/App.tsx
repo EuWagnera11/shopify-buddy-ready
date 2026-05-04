@@ -11,6 +11,9 @@ import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Wishlist from "./pages/Wishlist.tsx";
+import Collections from "./pages/Collections.tsx";
+import Brands from "./pages/Brands.tsx";
+import CollectionPage from "./pages/CollectionPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +27,10 @@ const AppRoutes = () => {
       <Route path="/sobre" element={<About />} />
       <Route path="/contato" element={<Contact />} />
       <Route path="/favoritos" element={<Wishlist />} />
+      <Route path="/colecoes" element={<Collections />} />
+      <Route path="/colecao/:slug" element={<CollectionPage mode="collection" />} />
+      <Route path="/marcas" element={<Brands />} />
+      <Route path="/marca/:slug" element={<CollectionPage mode="vendor" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
