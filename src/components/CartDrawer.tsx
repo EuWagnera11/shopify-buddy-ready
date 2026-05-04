@@ -22,6 +22,9 @@ export const CartDrawer = () => {
   };
 
   const currency = items[0]?.price.currencyCode || "BRL";
+  const FREE_SHIPPING_THRESHOLD = 299;
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - total);
+  const progress = Math.min(100, (total / FREE_SHIPPING_THRESHOLD) * 100);
 
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
@@ -29,6 +32,21 @@ export const CartDrawer = () => {
         <SheetHeader>
           <SheetTitle className="font-display text-2xl text-left">Seu carrinho</SheetTitle>
         </SheetHeader>
+
+        {items.length > 0 && (
+          <div className="bg-secondary/40 rounded-lg p-3 my-2 text-xs">
+            {remaining > 0 ? (
+              <p className="text-foreground/80">
+                Faltam <span className="font-semibold text-primary">{formatBRL(remaining)}</span> para frete grátis 🚚
+              </p>
+            ) : (
+              <p className="text-primary font-semibold">🎉 Você ganhou frete grátis!</p>
+            )}
+            <div className="mt-2 h-1.5 bg-background rounded-full overflow-hidden">
+              <div className="h-full bg-brand-gradient transition-all" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+        )}
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-4">

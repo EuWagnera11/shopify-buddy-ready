@@ -10,6 +10,7 @@ import ProductDetail from "./pages/ProductDetail.tsx";
 import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Wishlist from "./pages/Wishlist.tsx";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const AppRoutes = () => {
       <Route path="/produto/:handle" element={<ProductDetail />} />
       <Route path="/sobre" element={<About />} />
       <Route path="/contato" element={<Contact />} />
+      <Route path="/favoritos" element={<Wishlist />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
