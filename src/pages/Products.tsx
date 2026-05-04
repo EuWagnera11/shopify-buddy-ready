@@ -1,18 +1,28 @@
 import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
-import { products, categories } from "@/data/products";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import { useState, useMemo } from "react";
+import { Loader2 } from "lucide-react";
 
 const Products = () => {
-  const [category, setCategory] = useState("Todos");
+  const { data: products = [], isLoading } = useShopifyProducts();
+  const [vendor, setVendor] = useState("Todos");
   const [sort, setSort] = useState("featured");
 
+  const vendors = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => p.node.vendor && set.add(p.node.vendor));
+    return ["Todos", ...Array.from(set)];
+  }, [products]);
+
   const filtered = useMemo(() => {
-    let list = category === "Todos" ? products : products.filter((p) => p.category === category);
-    if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
-    if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
+    let list = vendor === "Todos" ? products : products.filter((p) => p.node.vendor === vendor);
+    const price = (p: typeof products[number]) =>
+      parseFloat(p.node.priceRange.minVariantPrice.amount);
+    if (sort === "price-asc") list = [...list].sort((a, b) => price(a) - price(b));
+    if (sort === "price-desc") list = [...list].sort((a, b) => price(b) - price(a));
     return list;
-  }, [category, sort]);
+  }, [products, vendor, sort]);
 
   return (
     <Layout>
@@ -29,17 +39,17 @@ const Products = () => {
       <section className="container py-12">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-12 pb-6 border-b border-border">
           <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
+            {vendors.map((v) => (
               <button
-                key={c}
-                onClick={() => setCategory(c)}
+                key={v}
+                onClick={() => setVendor(v)}
                 className={`px-5 py-2 text-xs uppercase tracking-[0.25em] border transition-colors ${
-                  category === c
+                  vendor === v
                     ? "border-primary text-primary bg-primary/5"
                     : "border-border text-muted-foreground hover:border-primary/50"
                 }`}
               >
-                {c}
+                {v}
               </button>
             ))}
           </div>
@@ -54,11 +64,19 @@ const Products = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center py-24">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : filtered.length === 0 ? (
+          <p className="text-center text-muted-foreground py-24">No products found</p>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12">
+            {filtered.map((p) => (
+              <ProductCard key={p.node.id} product={p} />
+            ))}
+          </div>
+        )}
       </section>
     </Layout>
   );

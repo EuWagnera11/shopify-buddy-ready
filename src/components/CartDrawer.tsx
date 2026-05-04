@@ -1,11 +1,27 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useCart } from "@/context/CartContext";
+import { useCartStore, useCartTotal } from "@/stores/cartStore";
 import { formatBRL } from "@/lib/format";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Minus, Plus, Trash2, ShoppingBag, Loader2, ExternalLink } from "lucide-react";
+import { useEffect } from "react";
 
 export const CartDrawer = () => {
-  const { items, isOpen, setOpen, updateQty, removeItem, total } = useCart();
+  const { items, isOpen, setOpen, updateQuantity, removeItem, getCheckoutUrl, syncCart, isLoading, isSyncing } =
+    useCartStore();
+  const total = useCartTotal();
+
+  useEffect(() => {
+    if (isOpen) syncCart();
+  }, [isOpen, syncCart]);
+
+  const handleCheckout = () => {
+    const url = getCheckoutUrl();
+    if (url) {
+      window.open(url, "_blank");
+      setOpen(false);
+    }
+  };
+
+  const currency = items[0]?.price.currencyCode || "BRL";
 
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
@@ -28,64 +44,76 @@ export const CartDrawer = () => {
         ) : (
           <>
             <div className="flex-1 overflow-y-auto -mx-6 px-6 py-4 space-y-4">
-              {items.map((item) => (
-                <div key={item.product.id} className="flex gap-4 pb-4 border-b border-border">
-                  <img
-                    src={item.product.image}
-                    alt={item.product.title}
-                    className="h-24 w-20 object-cover bg-secondary"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-display text-base truncate">{item.product.title}</h4>
-                    <p className="text-xs text-muted-foreground mb-3">{item.product.capacity}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center border border-border">
-                        <button
-                          onClick={() => updateQty(item.product.id, item.quantity - 1)}
-                          className="h-7 w-7 flex items-center justify-center hover:bg-secondary"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="w-8 text-center text-sm">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQty(item.product.id, item.quantity + 1)}
-                          className="h-7 w-7 flex items-center justify-center hover:bg-secondary"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
+              {items.map((item) => {
+                const img = item.product.node.images.edges[0]?.node;
+                return (
+                  <div key={item.variantId} className="flex gap-4 pb-4 border-b border-border">
+                    {img && (
+                      <img
+                        src={img.url}
+                        alt={item.product.node.title}
+                        className="h-24 w-20 object-cover bg-secondary rounded-md"
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-display text-base line-clamp-2">{item.product.node.title}</h4>
+                      {item.variantTitle && item.variantTitle !== "Default Title" && (
+                        <p className="text-xs text-muted-foreground mb-3">{item.variantTitle}</p>
+                      )}
+                      <div className="flex items-center justify-between mt-2">
+                        <div className="flex items-center border border-border rounded">
+                          <button
+                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
+                            className="h-7 w-7 flex items-center justify-center hover:bg-secondary"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </button>
+                          <span className="w-8 text-center text-sm">{item.quantity}</span>
+                          <button
+                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                            className="h-7 w-7 flex items-center justify-center hover:bg-secondary"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </button>
+                        </div>
+                        <span className="text-primary font-medium">
+                          {formatBRL(parseFloat(item.price.amount) * item.quantity)}
+                        </span>
                       </div>
-                      <span className="text-primary font-medium">
-                        {formatBRL(item.product.price * item.quantity)}
-                      </span>
                     </div>
+                    <button
+                      onClick={() => removeItem(item.variantId)}
+                      className="text-muted-foreground hover:text-destructive self-start"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                   </div>
-                  <button
-                    onClick={() => removeItem(item.product.id)}
-                    className="text-muted-foreground hover:text-destructive self-start"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="border-t border-border pt-4 space-y-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal</span>
-                <span>{formatBRL(total)}</span>
-              </div>
               <div className="flex justify-between text-base">
                 <span>Total</span>
                 <span className="text-primary font-medium text-xl">{formatBRL(total)}</span>
               </div>
-              <p className="text-xs text-muted-foreground">Frete calculado no checkout.</p>
-              <Link
-                to="/checkout"
-                onClick={() => setOpen(false)}
-                className="block w-full bg-brand-gradient text-primary-foreground text-center py-4 uppercase tracking-[0.25em] text-xs font-semibold hover:opacity-90 transition-opacity"
+              <p className="text-xs text-muted-foreground">
+                Frete e impostos calculados no checkout. Moeda: {currency}.
+              </p>
+              <button
+                onClick={handleCheckout}
+                disabled={isLoading || isSyncing}
+                className="w-full bg-brand-gradient text-primary-foreground text-center py-4 uppercase tracking-[0.25em] text-xs font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
               >
-                Finalizar compra
-              </Link>
+                {isLoading || isSyncing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <ExternalLink className="h-4 w-4" />
+                    Finalizar no Shopify
+                  </>
+                )}
+              </button>
             </div>
           </>
         )}
