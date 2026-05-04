@@ -2,12 +2,16 @@ import { Link } from "react-router-dom";
 import { ShopifyProduct } from "@/lib/shopify";
 import { formatBRL } from "@/lib/format";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingBag, Loader2 } from "lucide-react";
+import { useWishlistStore } from "@/stores/wishlistStore";
+import { ShoppingBag, Loader2, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { shopifyImg, shopifySrcSet } from "@/lib/image";
 
 export const ProductCard = ({ product }: { product: ShopifyProduct }) => {
   const addItem = useCartStore((s) => s.addItem);
   const isLoading = useCartStore((s) => s.isLoading);
+  const toggleWish = useWishlistStore((s) => s.toggle);
+  const wished = useWishlistStore((s) => s.ids.includes(product.node.id));
   const p = product.node;
   const variant = p.variants.edges[0]?.node;
   const image = p.images.edges[0]?.node;
@@ -29,15 +33,31 @@ export const ProductCard = ({ product }: { product: ShopifyProduct }) => {
     toast.success(`${p.title} adicionado`, { position: "top-center" });
   };
 
+  const handleWish = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWish(p.id);
+    toast.success(wished ? "Removido dos favoritos" : "Adicionado aos favoritos", { position: "top-center" });
+  };
+
   return (
     <Link
       to={`/produto/${p.handle}`}
-      className="group flex flex-col bg-background border border-border rounded-xl overflow-hidden hover:shadow-elevated hover:border-primary/40 transition-all"
+      className="group relative flex flex-col bg-background border border-border rounded-xl overflow-hidden hover:shadow-elevated hover:border-primary/40 transition-all"
     >
+      <button
+        onClick={handleWish}
+        aria-label={wished ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+        className="absolute top-3 right-3 z-10 h-8 w-8 flex items-center justify-center bg-background/80 backdrop-blur rounded-full hover:bg-background border border-border"
+      >
+        <Heart className={`h-4 w-4 transition-colors ${wished ? "fill-primary text-primary" : "text-muted-foreground"}`} />
+      </button>
       <div className="relative aspect-square overflow-hidden bg-secondary/30">
         {image && (
           <img
-            src={image.url}
+            src={shopifyImg(image.url, 480)}
+            srcSet={shopifySrcSet(image.url, [240, 360, 480, 720])}
+            sizes="(min-width:1024px) 25vw, 50vw"
             alt={image.altText || p.title}
             loading="lazy"
             className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
