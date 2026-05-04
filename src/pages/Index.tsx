@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ProductCard } from "@/components/ProductCard";
 import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import hero from "@/assets/hero.jpg";
+import { slugify } from "./CollectionPage";
 import { ArrowRight, Leaf, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -71,7 +72,7 @@ const Index = () => {
             {vendors.map((v) => (
               <Link
                 key={v}
-                to="/produtos"
+                to={`/marca/${slugify(v)}`}
                 className="bg-secondary/50 hover:bg-accent border border-border rounded-xl p-6 text-center transition-all hover:shadow-card hover:-translate-y-1"
               >
                 <h3 className="font-semibold text-sm">{v}</h3>
