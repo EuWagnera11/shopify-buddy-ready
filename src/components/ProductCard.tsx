@@ -16,46 +16,60 @@ export const ProductCard = ({ product }: { product: Product }) => {
     toast.success(`${product.title} adicionado`);
   };
 
+  const discount = product.compareAtPrice
+    ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+    : 0;
+
   return (
-    <Link to={`/produto/${product.handle}`} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden bg-secondary mb-4">
+    <Link
+      to={`/produto/${product.handle}`}
+      className="group flex flex-col bg-background border border-border rounded-xl overflow-hidden hover:shadow-elevated hover:border-primary/40 transition-all"
+    >
+      <div className="relative aspect-square overflow-hidden bg-secondary/30">
         <img
           src={product.image}
           alt={product.title}
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
         />
-        {product.compareAtPrice && (
-          <span className="absolute top-3 left-3 bg-gold-gradient px-3 py-1 text-[10px] uppercase tracking-widest text-primary-foreground font-medium">
-            Oferta
+        {discount > 0 && (
+          <span className="absolute top-3 left-3 bg-destructive text-destructive-foreground px-2.5 py-1 text-xs font-bold rounded-full">
+            -{discount}%
           </span>
         )}
         {!product.inStock && (
-          <div className="absolute inset-0 bg-background/70 flex items-center justify-center">
-            <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Esgotado</span>
+          <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Esgotado
+            </span>
           </div>
         )}
-        <button
-          onClick={handleAdd}
-          disabled={!product.inStock}
-          className="absolute bottom-3 right-3 h-11 w-11 flex items-center justify-center bg-background/90 backdrop-blur border border-primary/40 opacity-0 group-hover:opacity-100 transition-all hover:bg-gold-gradient hover:text-primary-foreground disabled:opacity-0"
-          aria-label="Adicionar ao carrinho"
-        >
-          <ShoppingBag className="h-4 w-4" />
-        </button>
       </div>
-      <div className="space-y-1">
-        <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">{product.category} · {product.capacity}</p>
-        <h3 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
+      <div className="p-4 flex flex-col flex-1">
+        <p className="text-[11px] uppercase tracking-wider text-primary font-semibold mb-1">
+          {product.category}
+        </p>
+        <h3 className="font-semibold text-sm md:text-base text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
           {product.title}
         </h3>
-        <div className="flex items-baseline gap-2 pt-1">
-          <span className="text-lg text-primary font-medium">{formatBRL(product.price)}</span>
+        <p className="text-xs text-muted-foreground mb-3">{product.capacity} · {product.material}</p>
+        <div className="mt-auto">
           {product.compareAtPrice && (
-            <span className="text-sm text-muted-foreground line-through">
+            <p className="text-xs text-muted-foreground line-through">
               {formatBRL(product.compareAtPrice)}
-            </span>
+            </p>
           )}
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-lg font-bold text-foreground">{formatBRL(product.price)}</span>
+            <button
+              onClick={handleAdd}
+              disabled={!product.inStock}
+              className="h-9 w-9 flex items-center justify-center bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              aria-label="Adicionar ao carrinho"
+            >
+              <ShoppingBag className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
     </Link>

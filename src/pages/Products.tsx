@@ -19,7 +19,7 @@ const Products = () => {
       <section className="border-b border-border py-16">
         <div className="container">
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-4">Coleção completa</p>
-          <h1 className="font-serif text-5xl md:text-6xl">Embalagens douradas</h1>
+          <h1 className="font-display text-5xl md:text-6xl">Embalagens douradas</h1>
           <p className="text-muted-foreground mt-4 max-w-2xl">
             Linha completa de frascos, potes e tubos para perfumaria e cosméticos premium.
           </p>

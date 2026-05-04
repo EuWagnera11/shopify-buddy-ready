@@ -11,7 +11,7 @@ export const CartDrawer = () => {
     <Sheet open={isOpen} onOpenChange={setOpen}>
       <SheetContent className="bg-background border-border w-full sm:max-w-md flex flex-col">
         <SheetHeader>
-          <SheetTitle className="font-serif text-2xl text-left">Seu carrinho</SheetTitle>
+          <SheetTitle className="font-display text-2xl text-left">Seu carrinho</SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
@@ -36,7 +36,7 @@ export const CartDrawer = () => {
                     className="h-24 w-20 object-cover bg-secondary"
                   />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-serif text-base truncate">{item.product.title}</h4>
+                    <h4 className="font-display text-base truncate">{item.product.title}</h4>
                     <p className="text-xs text-muted-foreground mb-3">{item.product.capacity}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center border border-border">
@@ -82,7 +82,7 @@ export const CartDrawer = () => {
               <Link
                 to="/checkout"
                 onClick={() => setOpen(false)}
-                className="block w-full bg-gold-gradient text-primary-foreground text-center py-4 uppercase tracking-[0.25em] text-xs font-semibold hover:opacity-90 transition-opacity"
+                className="block w-full bg-brand-gradient text-primary-foreground text-center py-4 uppercase tracking-[0.25em] text-xs font-semibold hover:opacity-90 transition-opacity"
               >
                 Finalizar compra
               </Link>

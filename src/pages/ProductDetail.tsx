@@ -42,7 +42,7 @@ const ProductDetail = () => {
 
         <div className="md:py-8">
           <p className="text-xs uppercase tracking-[0.3em] text-primary mb-3">{product.category}</p>
-          <h1 className="font-serif text-4xl md:text-5xl mb-6">{product.title}</h1>
+          <h1 className="font-display text-4xl md:text-5xl mb-6">{product.title}</h1>
 
           <div className="flex items-baseline gap-3 mb-8">
             <span className="text-3xl text-primary font-medium">{formatBRL(product.price)}</span>
@@ -79,7 +79,7 @@ const ProductDetail = () => {
               </div>
               <button
                 onClick={handleAdd}
-                className="flex-1 min-w-[200px] bg-gold-gradient text-primary-foreground py-4 px-8 uppercase tracking-[0.25em] text-xs font-semibold hover:opacity-90 transition-opacity shadow-gold"
+                className="flex-1 min-w-[200px] bg-brand-gradient text-primary-foreground py-4 px-8 uppercase tracking-[0.25em] text-xs font-semibold hover:opacity-90 transition-opacity shadow-elevated"
               >
                 Adicionar ao carrinho
               </button>
@@ -100,7 +100,7 @@ const ProductDetail = () => {
 
       {related.length > 0 && (
         <section className="container py-24">
-          <h2 className="font-serif text-3xl mb-12">Você também pode gostar</h2>
+          <h2 className="font-display text-3xl mb-12">Você também pode gostar</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
             {related.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
