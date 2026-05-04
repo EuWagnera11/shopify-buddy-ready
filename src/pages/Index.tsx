@@ -1,20 +1,19 @@
 import { Layout } from "@/components/Layout";
 import { Link } from "react-router-dom";
 import { ProductCard } from "@/components/ProductCard";
-import { products, categories } from "@/data/products";
+import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import hero from "@/assets/hero.jpg";
-import { ArrowRight, Leaf, Beaker, Sparkles, SprayCan } from "lucide-react";
-
-const categoryIcons: Record<string, typeof Leaf> = {
-  "Cosmético": Sparkles,
-  "Farmacêutico": Beaker,
-  "Linha Profissional": SprayCan,
-  "Sustentáveis": Leaf,
-};
+import { ArrowRight, Leaf, Loader2 } from "lucide-react";
+import { useMemo } from "react";
 
 const Index = () => {
-  const featured = products.filter((p) => p.featured);
-  const navCats = categories.filter((c) => c !== "Todos");
+  const { data: products = [], isLoading } = useShopifyProducts();
+  const featured = useMemo(() => products.slice(0, 8), [products]);
+  const vendors = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => p.node.vendor && set.add(p.node.vendor));
+    return Array.from(set).slice(0, 4);
+  }, [products]);
 
   return (
     <Layout>
@@ -61,37 +60,33 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="container py-16">
-        <div className="text-center mb-10">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">Compre por segmento</h2>
-          <p className="text-muted-foreground">Encontre a embalagem certa para o seu produto</p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {navCats.map((cat) => {
-            const Icon = categoryIcons[cat] || Sparkles;
-            return (
+      {/* Vendors / brands */}
+      {vendors.length > 0 && (
+        <section className="container py-16">
+          <div className="text-center mb-10">
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-2">Marcas parceiras</h2>
+            <p className="text-muted-foreground">Trabalhamos com fabricantes de confiança</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {vendors.map((v) => (
               <Link
-                key={cat}
+                key={v}
                 to="/produtos"
-                className="group bg-secondary/50 hover:bg-accent border border-border rounded-xl p-6 text-center transition-all hover:shadow-card hover:-translate-y-1"
+                className="bg-secondary/50 hover:bg-accent border border-border rounded-xl p-6 text-center transition-all hover:shadow-card hover:-translate-y-1"
               >
-                <div className="h-14 w-14 mx-auto mb-3 rounded-full bg-background flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <Icon className="h-7 w-7 text-primary group-hover:text-primary-foreground" strokeWidth={1.6} />
-                </div>
-                <h3 className="font-semibold text-sm">{cat}</h3>
+                <h3 className="font-semibold text-sm">{v}</h3>
               </Link>
-            );
-          })}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Featured */}
       <section className="container py-12">
         <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
           <div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold">Lançamentos</h2>
-            <p className="text-muted-foreground mt-1">Os produtos mais procurados da semana</p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold">Destaques</h2>
+            <p className="text-muted-foreground mt-1">Os produtos mais procurados</p>
           </div>
           <Link
             to="/produtos"
@@ -100,11 +95,19 @@ const Index = () => {
             Ver todos <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {featured.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : featured.length === 0 ? (
+          <p className="text-center text-muted-foreground py-12">No products found</p>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {featured.map((p) => (
+              <ProductCard key={p.node.id} product={p} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Banner CTA */}
