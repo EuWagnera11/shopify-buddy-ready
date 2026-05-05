@@ -1,31 +1,10 @@
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Mail, Phone, CreditCard, Truck, ShieldCheck } from "lucide-react";
+import { Instagram, Facebook, Mail, Phone } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 export const Footer = () => {
   return (
     <footer className="mt-24 bg-secondary/40 border-t border-border">
-      {/* Trust strip */}
-      <div className="border-b border-border bg-background">
-        <div className="container grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
-          {[
-            { icon: CreditCard, title: "Pague parcelado", desc: "em até 4x no cartão" },
-            { icon: Truck, title: "Entrega garantida", desc: "para todo o Brasil" },
-            { icon: ShieldCheck, title: "Compra 100% segura", desc: "seus dados protegidos" },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="py-6 px-4 flex items-center gap-4 justify-center md:justify-start">
-              <div className="h-12 w-12 rounded-full bg-accent flex items-center justify-center">
-                <Icon className="h-6 w-6 text-primary" strokeWidth={1.6} />
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm">{title}</h3>
-                <p className="text-xs text-muted-foreground">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="container py-14 grid gap-10 md:grid-cols-4">
         <div>
           <img src={logo} alt="Gold Embalagens" className="h-14 w-auto mb-4" />
