@@ -231,10 +231,32 @@ const ProductDetail = () => {
             <span>Envio em 24-48h</span>
           </div>
 
-          {p.description && (
-            <p className="text-muted-foreground leading-relaxed mb-8 whitespace-pre-line">
-              {p.description}
+          {copy?.subtitle && (
+            <p className="text-foreground/80 leading-relaxed mb-4 italic border-l-2 border-primary pl-4">
+              {copy.subtitle}
             </p>
+          )}
+
+          {description && (
+            <p className="text-muted-foreground leading-relaxed mb-6 whitespace-pre-line">
+              {description}
+            </p>
+          )}
+
+          {copy?.differentials && copy.differentials.length > 0 && (
+            <div className="mb-8">
+              <p className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">
+                Diferenciais
+              </p>
+              <ul className="space-y-2">
+                {copy.differentials.map((d, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-foreground/80">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {/* SELETOR DE QUANTIDADE — KITS */}
