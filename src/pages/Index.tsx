@@ -135,12 +135,12 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Produtos por categoria */}
+      {/* Produtos */}
       <section className="container py-16 md:py-20">
         <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
           <div>
             <h2 className="font-display text-3xl md:text-4xl font-bold">Nossos produtos</h2>
-            <p className="text-muted-foreground mt-1">Explore por categoria</p>
+            <p className="text-muted-foreground mt-1">Seleção das nossas embalagens</p>
           </div>
           <Link
             to="/produtos"
@@ -154,27 +154,12 @@ const Index = () => {
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        ) : groupedByType.length === 0 ? (
+        ) : products.length === 0 ? (
           <p className="text-center text-muted-foreground py-12">No products found</p>
         ) : (
-          <div className="space-y-12">
-            {groupedByType.map(({ type, items }) => (
-              <div key={type}>
-                <div className="flex items-end justify-between mb-5 flex-wrap gap-2">
-                  <h3 className="font-display text-xl md:text-2xl font-semibold">{type}</h3>
-                  <Link
-                    to={`/produtos?tipo=${encodeURIComponent(type)}`}
-                    className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 uppercase tracking-wider"
-                  >
-                    Ver mais <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                  {items.map((p) => (
-                    <ProductCard key={p.node.id} product={p} />
-                  ))}
-                </div>
-              </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {products.slice(0, 8).map((p) => (
+              <ProductCard key={p.node.id} product={p} />
             ))}
           </div>
         )}
