@@ -370,6 +370,21 @@ const ProductDetail = () => {
         </div>
       </section>
 
+      {/* BENEFÍCIOS */}
+      {copy?.benefits && copy.benefits.length > 0 && (
+        <section className="container py-8">
+          <h2 className="font-display text-2xl mb-6">Benefícios para você</h2>
+          <div className="grid md:grid-cols-2 gap-3">
+            {copy.benefits.map((b, i) => (
+              <div key={i} className="flex gap-3 p-4 border border-border rounded-lg bg-secondary/20">
+                <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <p className="text-sm text-foreground/85">{b}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* PARA QUEM É */}
       <section className="container py-8">
         <h2 className="font-display text-2xl mb-6">Para quem é este produto</h2>
