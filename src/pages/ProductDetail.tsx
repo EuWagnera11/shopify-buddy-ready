@@ -140,17 +140,20 @@ const ProductDetail = () => {
     }
   };
 
-  // Specs: extract from product options/tags when possible, else generic placeholders
+  const copy = findCopy(p.title, p.handle);
+
+  // Specs: prefer copy specs, fallback to product options
   const optionSpecs = (p.options || []).map((o) => ({
     label: o.name,
     value: o.values.join(", "),
   }));
   const specs = [
-    ...optionSpecs,
-    { label: "Indicação", value: "Cosméticos, farmacêuticos e brindes" },
-    { label: "Compatibilidade", value: "Uso cosmético e farmacêutico" },
+    ...(copy?.specs ?? []),
+    ...(copy ? [] : optionSpecs),
     { label: "Vendido por", value: "Gold Embalagens" },
   ];
+
+  const description = copy?.description || p.description;
 
   const faq = [
     { q: "Esse produto é compatível com cosmético oleoso?", a: "Sim. O material é resistente a fórmulas oleosas comuns em cosméticos. Para fórmulas agressivas, recomendamos teste prévio." },
