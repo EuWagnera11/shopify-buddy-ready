@@ -30,6 +30,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511999999999"; // placeholder
 
@@ -139,17 +140,20 @@ const ProductDetail = () => {
     }
   };
 
-  // Specs: extract from product options/tags when possible, else generic placeholders
+  const copy = findCopy(p.title, p.handle);
+
+  // Specs: prefer copy specs, fallback to product options
   const optionSpecs = (p.options || []).map((o) => ({
     label: o.name,
     value: o.values.join(", "),
   }));
   const specs = [
-    ...optionSpecs,
-    { label: "Indicação", value: "Cosméticos, farmacêuticos e brindes" },
-    { label: "Compatibilidade", value: "Uso cosmético e farmacêutico" },
+    ...(copy?.specs ?? []),
+    ...(copy ? [] : optionSpecs),
     { label: "Vendido por", value: "Gold Embalagens" },
   ];
+
+  const description = copy?.description || p.description;
 
   const faq = [
     { q: "Esse produto é compatível com cosmético oleoso?", a: "Sim. O material é resistente a fórmulas oleosas comuns em cosméticos. Para fórmulas agressivas, recomendamos teste prévio." },
@@ -227,10 +231,32 @@ const ProductDetail = () => {
             <span>Envio em 24-48h</span>
           </div>
 
-          {p.description && (
-            <p className="text-muted-foreground leading-relaxed mb-8 whitespace-pre-line">
-              {p.description}
+          {copy?.subtitle && (
+            <p className="text-foreground/80 leading-relaxed mb-4 italic border-l-2 border-primary pl-4">
+              {copy.subtitle}
             </p>
+          )}
+
+          {description && (
+            <p className="text-muted-foreground leading-relaxed mb-6 whitespace-pre-line">
+              {description}
+            </p>
+          )}
+
+          {copy?.differentials && copy.differentials.length > 0 && (
+            <div className="mb-8">
+              <p className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">
+                Diferenciais
+              </p>
+              <ul className="space-y-2">
+                {copy.differentials.map((d, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-foreground/80">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {/* SELETOR DE QUANTIDADE — KITS */}
@@ -343,6 +369,21 @@ const ProductDetail = () => {
           </button>
         </div>
       </section>
+
+      {/* BENEFÍCIOS */}
+      {copy?.benefits && copy.benefits.length > 0 && (
+        <section className="container py-8">
+          <h2 className="font-display text-2xl mb-6">Benefícios para você</h2>
+          <div className="grid md:grid-cols-2 gap-3">
+            {copy.benefits.map((b, i) => (
+              <div key={i} className="flex gap-3 p-4 border border-border rounded-lg bg-secondary/20">
+                <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                <p className="text-sm text-foreground/85">{b}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* PARA QUEM É */}
       <section className="container py-8">
