@@ -72,11 +72,6 @@ export const ProductCard = ({ product }: { product: ShopifyProduct }) => {
         )}
       </div>
       <div className="p-4 flex flex-col flex-1">
-        {p.vendor && (
-          <p className="text-[11px] uppercase tracking-wider text-primary font-semibold mb-1">
-            {p.vendor}
-          </p>
-        )}
         <h3 className="font-semibold text-sm md:text-base text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-3">
           {p.title}
         </h3>
