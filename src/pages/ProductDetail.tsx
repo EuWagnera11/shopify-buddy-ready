@@ -30,6 +30,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511999999999"; // placeholder
 
