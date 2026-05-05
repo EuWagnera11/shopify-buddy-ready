@@ -62,6 +62,18 @@ const reasons = [
 const Index = () => {
   const { data: products = [], isLoading } = useShopifyProducts();
   const featured = useMemo(() => products.slice(0, 8), [products]);
+  const groupedByType = useMemo(() => {
+    const map = new Map<string, typeof products>();
+    products.forEach((p) => {
+      const type = p.node.productType?.trim() || "Outros";
+      if (!map.has(type)) map.set(type, []);
+      map.get(type)!.push(p);
+    });
+    return Array.from(map.entries())
+      .filter(([, items]) => items.length > 0)
+      .slice(0, 4)
+      .map(([type, items]) => ({ type, items: items.slice(0, 4) }));
+  }, [products]);
 
   return (
     <Layout>
