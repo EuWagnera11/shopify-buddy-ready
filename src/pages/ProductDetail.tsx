@@ -30,6 +30,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511916292626"; // placeholder
@@ -175,9 +176,9 @@ const ProductDetail = () => {
         </nav>
       </div>
 
-      <section className="container grid md:grid-cols-2 gap-12 lg:gap-16 py-4">
-        {/* GALERIA */}
-        <div>
+      <section className="container grid md:grid-cols-2 gap-10 lg:gap-14 py-4 items-start">
+        {/* GALERIA — sticky */}
+        <div className="md:sticky md:top-24">
           <div className="aspect-square bg-secondary/40 overflow-hidden rounded-xl relative">
             {images[imgIdx] && (
               <img
@@ -204,63 +205,44 @@ const ProductDetail = () => {
           )}
         </div>
 
-        <div className="md:py-2">
+        {/* COLUNA DE COMPRA */}
+        <div className="md:py-2 space-y-6">
           {/* CABEÇALHO */}
-          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
-            Vendido por Gold Embalagens
-          </p>
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <h1 className="font-display text-3xl md:text-4xl">{p.title}</h1>
-            <div className="flex items-center gap-2 shrink-0">
-              <button onClick={() => toggleWish(p.id)} aria-label="Favoritar" className="h-10 w-10 flex items-center justify-center border border-border rounded-full hover:border-primary">
-                <Heart className={`h-4 w-4 ${wished ? "fill-primary text-primary" : ""}`} />
-              </button>
-              <button onClick={handleShare} aria-label="Compartilhar" className="h-10 w-10 flex items-center justify-center border border-border rounded-full hover:border-primary">
-                <Share2 className="h-4 w-4" />
-              </button>
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
+              Vendido por Gold Embalagens
+            </p>
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <h1 className="font-display text-3xl md:text-4xl leading-tight">{p.title}</h1>
+              <div className="flex items-center gap-2 shrink-0">
+                <button onClick={() => toggleWish(p.id)} aria-label="Favoritar" className="h-10 w-10 flex items-center justify-center border border-border rounded-full hover:border-primary">
+                  <Heart className={`h-4 w-4 ${wished ? "fill-primary text-primary" : ""}`} />
+                </button>
+                <button onClick={handleShare} aria-label="Compartilhar" className="h-10 w-10 flex items-center justify-center border border-border rounded-full hover:border-primary">
+                  <Share2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+              <span className={inStock ? "text-emerald-700" : "text-destructive"}>
+                {inStock ? "● Em estoque" : "Indisponível"}
+              </span>
+              <span className="text-foreground/30">·</span>
+              <span>Envio em 24-48h</span>
+              <span className="text-foreground/30">·</span>
+              <span className="text-muted-foreground/70">Sem avaliações ainda</span>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mb-6">
-            <span className="text-muted-foreground/60">Sem avaliações ainda</span>
-            <span className="text-foreground/60">·</span>
-            <span className={inStock ? "text-emerald-700" : "text-destructive"}>
-              {inStock ? "Em estoque" : "Indisponível"}
-            </span>
-            <span className="text-foreground/60">·</span>
-            <span>Envio em 24-48h</span>
-          </div>
-
           {copy?.subtitle && (
-            <p className="text-foreground/80 leading-relaxed mb-4 italic border-l-2 border-primary pl-4">
+            <p className="text-foreground/80 leading-relaxed italic border-l-2 border-primary pl-4">
               {copy.subtitle}
             </p>
           )}
 
-          {description && (
-            <p className="text-muted-foreground leading-relaxed mb-6 whitespace-pre-line">
-              {description}
-            </p>
-          )}
-
-          {copy?.differentials && copy.differentials.length > 0 && (
-            <div className="mb-8">
-              <p className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">
-                Diferenciais
-              </p>
-              <ul className="space-y-2">
-                {copy.differentials.map((d, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-foreground/80">
-                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>{d}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {/* SELETOR DE QUANTIDADE — KITS */}
-          <div className="mb-6">
+          <div>
             <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
               Escolha a quantidade
             </p>
@@ -291,42 +273,45 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* PREÇO TOTAL */}
-          <div className="flex items-baseline gap-3 mb-6">
-            <span className="text-3xl text-primary font-medium">{formatBRL(total)}</span>
-            <span className="text-xs text-muted-foreground">total · {kitQty} un</span>
-          </div>
-
-          {/* BOTÕES */}
-          {inStock ? (
-            <div className="space-y-2 mb-6 hidden md:block">
-              <button
-                onClick={handleBuyNow}
-                disabled={adding}
-                className="w-full bg-brand-gradient text-primary-foreground py-4 px-8 uppercase tracking-[0.2em] text-xs font-semibold hover:opacity-90 transition-opacity shadow-elevated rounded-md"
-              >
-                {adding ? <Loader2 className="h-4 w-4 animate-spin inline" /> : `Comprar agora — ${formatBRL(total)}`}
-              </button>
-              <button
-                onClick={handleAdd}
-                disabled={adding}
-                className="w-full border border-primary text-primary py-3 px-6 uppercase tracking-[0.2em] text-xs font-semibold hover:bg-primary/5 transition-colors rounded-md"
-              >
-                Adicionar ao carrinho
-              </button>
-              <button
-                onClick={handleWhatsApp}
-                className="w-full flex items-center justify-center gap-2 border border-[#25D366] text-[#1ebe5d] py-3 px-6 uppercase tracking-[0.2em] text-xs font-semibold hover:bg-[#25D366]/5 transition-colors rounded-md"
-              >
-                <MessageCircle className="h-4 w-4" />
-                Cotar pelo WhatsApp
-              </button>
+          {/* PREÇO + CTAs */}
+          <div className="rounded-xl border border-border bg-secondary/20 p-5">
+            <div className="flex items-baseline gap-3 mb-4">
+              <span className="text-3xl text-primary font-medium">{formatBRL(total)}</span>
+              <span className="text-xs text-muted-foreground">total · {kitQty} un</span>
             </div>
-          ) : (
-            <button disabled className="w-full bg-secondary text-muted-foreground py-4 uppercase tracking-[0.25em] text-xs mb-6 cursor-not-allowed rounded-md">
-              Esgotado
-            </button>
-          )}
+
+            {inStock ? (
+              <div className="space-y-2 hidden md:block">
+                <button
+                  onClick={handleBuyNow}
+                  disabled={adding}
+                  className="w-full bg-brand-gradient text-primary-foreground py-4 px-8 uppercase tracking-[0.2em] text-xs font-semibold hover:opacity-90 transition-opacity shadow-elevated rounded-md"
+                >
+                  {adding ? <Loader2 className="h-4 w-4 animate-spin inline" /> : `Comprar agora — ${formatBRL(total)}`}
+                </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={handleAdd}
+                    disabled={adding}
+                    className="border border-primary text-primary py-3 px-4 uppercase tracking-[0.15em] text-xs font-semibold hover:bg-primary/5 transition-colors rounded-md"
+                  >
+                    Adicionar
+                  </button>
+                  <button
+                    onClick={handleWhatsApp}
+                    className="flex items-center justify-center gap-2 border border-[#25D366] text-[#1ebe5d] py-3 px-4 uppercase tracking-[0.15em] text-xs font-semibold hover:bg-[#25D366]/5 transition-colors rounded-md"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    WhatsApp
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button disabled className="w-full bg-secondary text-muted-foreground py-4 uppercase tracking-[0.25em] text-xs cursor-not-allowed rounded-md">
+                Esgotado
+              </button>
+            )}
+          </div>
 
           {/* TRUST BADGES */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 py-4 border-y border-border text-xs">
@@ -335,55 +320,101 @@ const ProductDetail = () => {
             <div className="flex items-center gap-2 text-muted-foreground"><RefreshCw className="h-4 w-4 text-primary" /> Troca em 7 dias</div>
             <div className="flex items-center gap-2 text-muted-foreground"><CheckCircle2 className="h-4 w-4 text-primary" /> Vedação testada</div>
           </div>
+
+          {/* DIFERENCIAIS */}
+          {copy?.differentials && copy.differentials.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest text-primary mb-3 font-semibold">
+                Diferenciais
+              </p>
+              <ul className="space-y-2">
+                {copy.differentials.map((d, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-foreground/80">
+                    <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ESPECIFICAÇÕES */}
-      <section className="container py-12 grid md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="font-display text-2xl mb-4">Especificações técnicas</h2>
-          <table className="w-full text-sm border border-border rounded-md overflow-hidden">
-            <tbody>
-              {specs.map((s, i) => (
-                <tr key={i} className={i % 2 === 0 ? "bg-secondary/30" : ""}>
-                  <td className="px-4 py-2.5 text-muted-foreground w-1/2">{s.label}</td>
-                  <td className="px-4 py-2.5 font-medium">{s.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* TABS: descrição / specs / benefícios / FAQ */}
+      <section className="container py-12">
+        <Tabs defaultValue="descricao" className="w-full">
+          <TabsList className="w-full justify-start overflow-x-auto h-auto bg-transparent border-b border-border rounded-none p-0 gap-2">
+            <TabsTrigger value="descricao" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-3">Descrição</TabsTrigger>
+            <TabsTrigger value="specs" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-3">Especificações</TabsTrigger>
+            {copy?.benefits && copy.benefits.length > 0 && (
+              <TabsTrigger value="beneficios" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-3">Benefícios</TabsTrigger>
+            )}
+            <TabsTrigger value="faq" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-4 py-3">FAQ</TabsTrigger>
+          </TabsList>
 
-        {/* PERSONALIZAÇÃO */}
-        <div className="bg-accent/40 border border-primary/20 rounded-xl p-6 flex flex-col">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary mb-2">Personalização sob demanda</p>
-          <h3 className="font-display text-2xl mb-3">Sua marca, seu rótulo, sua cor.</h3>
-          <p className="text-sm text-muted-foreground mb-6">
-            Rótulo, gravação a laser ou cor especial — personalizamos a partir de 500 unidades. Orçamento em até 24h.
-          </p>
-          <button
-            onClick={handleWhatsApp}
-            className="mt-auto self-start bg-brand-gradient text-primary-foreground px-6 py-3 uppercase tracking-[0.2em] text-xs font-semibold rounded-md hover:opacity-90"
-          >
-            Solicitar orçamento
-          </button>
-        </div>
-      </section>
-
-      {/* BENEFÍCIOS */}
-      {copy?.benefits && copy.benefits.length > 0 && (
-        <section className="container py-8">
-          <h2 className="font-display text-2xl mb-6">Benefícios para você</h2>
-          <div className="grid md:grid-cols-2 gap-3">
-            {copy.benefits.map((b, i) => (
-              <div key={i} className="flex gap-3 p-4 border border-border rounded-lg bg-secondary/20">
-                <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <p className="text-sm text-foreground/85">{b}</p>
+          <TabsContent value="descricao" className="pt-8">
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="md:col-span-2">
+                {description ? (
+                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{description}</p>
+                ) : (
+                  <p className="text-muted-foreground">Sem descrição disponível.</p>
+                )}
               </div>
-            ))}
-          </div>
-        </section>
-      )}
+              <div className="bg-accent/40 border border-primary/20 rounded-xl p-6 flex flex-col">
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-2">Personalização</p>
+                <h3 className="font-display text-xl mb-3">Sua marca, seu rótulo.</h3>
+                <p className="text-sm text-muted-foreground mb-5">
+                  Rótulo, gravação a laser ou cor especial — a partir de 500 unidades.
+                </p>
+                <button
+                  onClick={handleWhatsApp}
+                  className="mt-auto self-start bg-brand-gradient text-primary-foreground px-5 py-2.5 uppercase tracking-[0.2em] text-xs font-semibold rounded-md hover:opacity-90"
+                >
+                  Solicitar orçamento
+                </button>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="specs" className="pt-8">
+            <table className="w-full text-sm border border-border rounded-md overflow-hidden max-w-3xl">
+              <tbody>
+                {specs.map((s, i) => (
+                  <tr key={i} className={i % 2 === 0 ? "bg-secondary/30" : ""}>
+                    <td className="px-4 py-2.5 text-muted-foreground w-1/2">{s.label}</td>
+                    <td className="px-4 py-2.5 font-medium">{s.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </TabsContent>
+
+          {copy?.benefits && copy.benefits.length > 0 && (
+            <TabsContent value="beneficios" className="pt-8">
+              <div className="grid md:grid-cols-2 gap-3">
+                {copy.benefits.map((b, i) => (
+                  <div key={i} className="flex gap-3 p-4 border border-border rounded-lg bg-secondary/20">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <p className="text-sm text-foreground/85">{b}</p>
+                  </div>
+                ))}
+              </div>
+            </TabsContent>
+          )}
+
+          <TabsContent value="faq" className="pt-8">
+            <Accordion type="single" collapsible className="border border-border rounded-xl px-4 max-w-3xl">
+              {faq.map((f, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="last:border-b-0">
+                  <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </TabsContent>
+        </Tabs>
+      </section>
 
       {/* PARA QUEM É */}
       <section className="container py-8">
@@ -423,19 +454,6 @@ const ProductDetail = () => {
           <p className="text-muted-foreground mb-1">Nenhuma avaliação ainda.</p>
           <p className="text-sm text-muted-foreground/70">Seja o primeiro a avaliar este produto após sua compra.</p>
         </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="container py-12">
-        <h2 className="font-display text-2xl mb-6">Perguntas frequentes</h2>
-        <Accordion type="single" collapsible className="border border-border rounded-xl px-4">
-          {faq.map((f, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="last:border-b-0">
-              <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
       </section>
 
       {/* RODAPÉ DE PRODUTOS */}
