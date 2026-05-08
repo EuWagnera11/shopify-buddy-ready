@@ -30,6 +30,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511916292626"; // placeholder
