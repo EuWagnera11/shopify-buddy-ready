@@ -23,7 +23,7 @@ const Contact = () => {
           <ul className="space-y-5 text-sm">
             <li className="flex items-center gap-4">
               <Phone className="h-5 w-5 text-primary" />
-              <span>(11) 9 9999-9999</span>
+              <span>(11) 91629-2626</span>
             </li>
             <li className="flex items-center gap-4">
               <Mail className="h-5 w-5 text-primary" />

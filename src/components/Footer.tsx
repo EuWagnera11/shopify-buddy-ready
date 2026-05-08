@@ -26,7 +26,7 @@ export const Footer = () => {
         <div>
           <h4 className="font-semibold text-sm mb-4">Atendimento</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> (11) 9 9999-9999</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> (11) 91629-2626</li>
             <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" /> contato@goldembalagens.com</li>
             <li>Seg–Sex · 9h às 18h</li>
             <li><Link to="/contato" className="hover:text-primary">Fale conosco</Link></li>
