@@ -226,36 +226,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Produtos */}
-      <section className="container py-16 md:py-20">
-        <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-          <div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold">Nossos produtos</h2>
-            <p className="text-muted-foreground mt-1">Seleção das nossas embalagens</p>
-          </div>
-          <Link
-            to="/produtos"
-            className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1 group"
-          >
-            Ver catálogo completo
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : products.length === 0 ? (
-          <p className="text-center text-muted-foreground py-12">No products found</p>
-        ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {products.slice(0, 8).map((p) => (
-              <ProductCard key={p.node.id} product={p} />
-            ))}
-          </div>
-        )}
-      </section>
-
       {/* Banner CTA */}
       <section className="container pb-16">
         <div className="grid md:grid-cols-2 gap-8 items-center bg-brand-gradient rounded-2xl p-8 md:p-14 text-primary-foreground overflow-hidden">
