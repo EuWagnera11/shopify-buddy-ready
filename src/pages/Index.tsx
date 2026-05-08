@@ -84,7 +84,7 @@ const Index = () => {
             <p className="text-[11px] uppercase tracking-[0.25em] text-brand-coal/60 mb-8 font-medium">
               Embalagens profissionais — Mínimo 1 unidade
             </p>
-            <h1 className="font-display italic text-5xl md:text-7xl lg:text-[6.5rem] font-bold leading-[1.02] mb-8 text-brand-coal">
+            <h1 className="font-display text-5xl md:text-7xl lg:text-[6.5rem] font-bold leading-[1.02] mb-8 text-brand-coal">
               Frascos, potes <br className="hidden md:block" />
               e bisnagas que <br className="hidden md:block" />
               <span className="text-brand-gold">dão margem</span> <br className="hidden md:block" />
