@@ -57,10 +57,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        brand: {
+          cream: "#F5F0E8",
+          coal: "#1F1F1F",
+          gold: "#C9923A",
+          taupe: "#8B8378",
+          ink: "#2A2A2A",
+          line: "#E8E2D6",
+        },
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
       },
       backgroundImage: {
         'brand-gradient': 'var(--gradient-brand)',

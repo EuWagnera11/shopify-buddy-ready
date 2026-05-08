@@ -77,25 +77,31 @@ const Index = () => {
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="relative bg-soft-gradient overflow-hidden">
-        <div className="container grid md:grid-cols-2 gap-8 items-center py-12 md:py-20">
-          <div>
-            <span className="inline-block bg-accent text-primary text-xs font-semibold px-4 py-1.5 rounded-full mb-5">
-              Embalagens profissionais · Pedido mínimo: 1 unidade
-            </span>
-            <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05] mb-5 text-foreground">
-              Frascos, potes e bisnagas que dão{" "}
-              <span className="text-primary">margem</span> ao seu negócio.
+      {/* HERO Editorial Quiet Luxury */}
+      <section className="relative bg-brand-cream overflow-hidden">
+        <div className="container py-20 md:py-28 lg:py-36 relative z-10">
+          <div className="max-w-3xl">
+            <p className="text-[11px] uppercase tracking-[0.25em] text-brand-coal/60 mb-8 font-medium">
+              Embalagens profissionais — Mínimo 1 unidade
+            </p>
+            <h1 className="font-display italic text-5xl md:text-7xl lg:text-[6.5rem] font-bold leading-[1.02] mb-8 text-brand-coal">
+              Frascos, potes <br className="hidden md:block" />
+              e bisnagas que <br className="hidden md:block" />
+              <span className="text-brand-gold">dão margem</span> <br className="hidden md:block" />
+              ao seu negócio.
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg">
-              Embalagens cosméticas e farmacêuticas para marcas indie, clínicas, salões e brindes.
-              Compre a partir de 1 unidade e receba em até 5 dias úteis.
+            <div className="w-16 h-px bg-brand-gold mb-8" />
+            <p className="text-base md:text-lg text-brand-coal/70 mb-10 max-w-xl leading-relaxed">
+              Embalagens cosméticas e farmacêuticas para marcas indie,
+              clínicas, salões e brindes corporativos. <br />
+              <strong className="text-brand-coal font-medium">
+                Compre a partir de 1 unidade. Receba em 5 dias úteis.
+              </strong>
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
                 to="/produtos"
-                className="group inline-flex items-center gap-2 bg-brand-gradient px-7 py-3.5 rounded-full text-sm font-semibold text-primary-foreground hover:opacity-90 shadow-elevated"
+                className="group inline-flex items-center gap-2 bg-brand-coal text-white px-8 py-4 text-sm font-medium uppercase tracking-wider hover:bg-brand-gold transition-colors"
               >
                 Ver catálogo
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -104,22 +110,24 @@ const Index = () => {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold border border-border bg-background hover:border-primary hover:text-primary"
+                className="inline-flex items-center gap-2 px-8 py-4 text-sm font-medium uppercase tracking-wider border border-brand-coal/20 hover:border-brand-gold hover:text-brand-gold transition-colors"
               >
                 <MessageCircle className="h-4 w-4" />
-                Falar no WhatsApp
+                WhatsApp
               </a>
             </div>
           </div>
-          <div className="relative">
-            <img
-              src={hero}
-              alt="Embalagens cosméticas e farmacêuticas"
-              width={1600}
-              height={900}
-              className="w-full rounded-2xl shadow-elevated object-cover aspect-[4/3]"
-            />
-          </div>
+        </div>
+
+        {/* Foto editorial flutuando à direita no desktop */}
+        <div className="hidden lg:block absolute right-0 top-0 bottom-0 w-1/2 z-0">
+          <img src={hero} alt="Embalagens" className="h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent via-brand-cream/30 to-brand-cream" />
+        </div>
+
+        {/* Foto mobile abaixo do texto */}
+        <div className="lg:hidden">
+          <img src={hero} alt="" className="w-full aspect-[4/3] object-cover" />
         </div>
       </section>
 
