@@ -456,19 +456,6 @@ const ProductDetail = () => {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="container py-12">
-        <h2 className="font-display text-2xl mb-6">Perguntas frequentes</h2>
-        <Accordion type="single" collapsible className="border border-border rounded-xl px-4">
-          {faq.map((f, i) => (
-            <AccordionItem key={i} value={`faq-${i}`} className="last:border-b-0">
-              <AccordionTrigger className="text-left">{f.q}</AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </section>
-
       {/* RODAPÉ DE PRODUTOS */}
       {sameLine.length > 0 && (
         <section className="container py-12">
