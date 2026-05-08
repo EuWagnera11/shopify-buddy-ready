@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
 
-const WHATSAPP_NUMBER = "5511999999999"; // placeholder
+const WHATSAPP_NUMBER = "5511916292626"; // placeholder
 const WHATSAPP_MESSAGE = "Olá! Gostaria de saber mais sobre as embalagens da Gold.";
 
 export const WhatsAppButton = () => {
