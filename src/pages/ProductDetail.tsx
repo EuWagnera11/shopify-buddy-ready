@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/accordion";
 import { findCopy } from "@/lib/productCopies";
 
-const WHATSAPP_NUMBER = "5511999999999"; // placeholder
+const WHATSAPP_NUMBER = "5511916292626"; // placeholder
 
 const KIT_OPTIONS = [
   { qty: 1, label: "1 un" },

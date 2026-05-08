@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 
-const WHATSAPP_URL = "https://wa.me/5511999999999";
+const WHATSAPP_URL = "https://wa.me/5511916292626";
 
 const audiences = [
   {
