@@ -5,29 +5,24 @@ import { useShopifyProducts } from "@/hooks/useShopifyProducts";
 import hero from "@/assets/hero.jpg";
 import {
   ArrowRight,
-  Leaf,
   Loader2,
-  MessageCircle,
   Sparkles,
   Stethoscope,
   Scissors,
   Gift,
   Package,
   Truck,
-  Palette,
   Headphones,
   ShieldCheck,
   Award,
 } from "lucide-react";
 import { useMemo } from "react";
 
-const WHATSAPP_URL = "https://wa.me/5511916292626";
-
 const audiences = [
   {
     icon: Sparkles,
     title: "Marcas independentes de cosméticos",
-    desc: "Para quem está começando ou escalando: compre poucas unidades, teste fórmulas e personalize sem MOQ alto.",
+    desc: "Para quem está começando ou escalando: compre poucas unidades e teste fórmulas sem MOQ alto.",
     cta: "Ver linha cosmética",
   },
   {
