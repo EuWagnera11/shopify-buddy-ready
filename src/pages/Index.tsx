@@ -26,7 +26,7 @@ const WHATSAPP_URL = "https://wa.me/5511916292626";
 const audiences = [
   {
     icon: Sparkles,
-    title: "Marcas indie de cosméticos",
+    title: "Marcas independentes de cosméticos",
     desc: "Para quem está começando ou escalando: compre poucas unidades, teste fórmulas e personalize sem MOQ alto.",
     cta: "Ver linha cosmética",
   },
@@ -51,9 +51,8 @@ const audiences = [
 ];
 
 const reasons = [
-  { icon: Package, title: "Pedido mínimo de 1 unidade", desc: "Teste, prototipe e revenda sem precisar comprar grandes lotes." },
+  { icon: Package, title: "Sem pedido mínimo", desc: "Teste, prototipe e revenda sem precisar comprar grandes lotes." },
   { icon: Truck, title: "Envio em até 48h", desc: "Estoque próprio e logística ágil para todo o Brasil." },
-  { icon: Palette, title: "Personalização sob demanda", desc: "Rótulos, silk e cores especiais para a identidade da sua marca." },
   { icon: Headphones, title: "Atendimento técnico", desc: "Time especializado para indicar a embalagem ideal para sua fórmula." },
   { icon: ShieldCheck, title: "Compra 100% segura", desc: "Pagamento protegido e entrega garantida ou seu dinheiro de volta." },
   { icon: Award, title: "Curadoria de fornecedores", desc: "Trabalhamos só com fabricantes auditados, com qualidade comprovada." },
@@ -82,39 +81,30 @@ const Index = () => {
         <div className="container py-20 md:py-28 lg:py-36 relative z-10">
           <div className="max-w-3xl">
             <p className="text-[11px] uppercase tracking-[0.25em] text-brand-coal/60 mb-8 font-medium">
-              Embalagens profissionais — Mínimo 1 unidade
+              Embalagens profissionais — Sem pedido mínimo
             </p>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight mb-8 text-brand-coal">
               Frascos, potes <br className="hidden md:block" />
               e bisnagas que <br className="hidden md:block" />
-              <span className="text-brand-gold">dão margem</span> <br className="hidden md:block" />
+              dão margem <br className="hidden md:block" />
               ao seu negócio.
             </h1>
-            <div className="w-16 h-px bg-brand-gold mb-8" />
+            <div className="w-16 h-px bg-brand-coal/30 mb-8" />
             <p className="text-base md:text-lg text-brand-coal/70 mb-10 max-w-xl leading-relaxed">
-              Embalagens cosméticas e farmacêuticas para marcas indie,
+              Embalagens cosméticas e farmacêuticas para marcas independentes,
               clínicas, salões e brindes corporativos. <br />
               <strong className="text-brand-coal font-medium">
-                Compre a partir de 1 unidade. Receba em 5 dias úteis.
+                Compre sem pedido mínimo.
               </strong>
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
                 to="/produtos"
-                className="group inline-flex items-center gap-2 bg-brand-coal text-white px-8 py-4 text-sm font-medium uppercase tracking-wider hover:bg-brand-gold transition-colors"
+                className="group inline-flex items-center gap-2 bg-brand-coal text-white px-8 py-4 text-sm font-medium uppercase tracking-wider hover:bg-brand-coal/90 transition-colors"
               >
                 Ver catálogo
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 text-sm font-medium uppercase tracking-wider border border-brand-coal/20 hover:border-brand-gold hover:text-brand-gold transition-colors"
-              >
-                <MessageCircle className="h-4 w-4" />
-                WhatsApp
-              </a>
             </div>
           </div>
         </div>
@@ -135,9 +125,8 @@ const Index = () => {
       <section className="bg-brand-gradient text-primary-foreground">
         <div className="container py-4 text-center text-xs md:text-sm font-medium">
           <p className="leading-relaxed">
-            Pedido mínimo 1 un <span className="opacity-60 mx-2">·</span>
+            Sem pedido mínimo <span className="opacity-60 mx-2">·</span>
             Envio em 48h <span className="opacity-60 mx-2">·</span>
-            Personalização sob demanda <span className="opacity-60 mx-2">·</span>
             Atendimento técnico
           </p>
         </div>
@@ -264,33 +253,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Banner CTA */}
-      <section className="container pb-16">
-        <div className="grid md:grid-cols-2 gap-8 items-center bg-brand-gradient rounded-2xl p-8 md:p-14 text-primary-foreground overflow-hidden">
-          <div>
-            <span className="inline-block bg-white/15 text-xs font-semibold px-3 py-1 rounded-full mb-4">
-              Linha sustentável
-            </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 leading-tight">
-              Embalagens que respeitam o planeta.
-            </h2>
-            <p className="opacity-90 mb-6 max-w-md">
-              Conheça nossa linha de embalagens recicláveis e biodegradáveis, ideais para marcas
-              que valorizam o impacto ambiental.
-            </p>
-            <Link
-              to="/produtos"
-              className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-full hover:bg-white/90"
-            >
-              Explorar linha eco
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <div className="hidden md:block">
-            <Leaf className="h-48 w-48 opacity-20 ml-auto" strokeWidth={1} />
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 };
