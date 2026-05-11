@@ -353,26 +353,13 @@ const ProductDetail = () => {
           </TabsList>
 
           <TabsContent value="descricao" className="pt-8">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="md:col-span-2">
+            <div className="grid gap-8">
+              <div>
                 {description ? (
                   <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{description}</p>
                 ) : (
                   <p className="text-muted-foreground">Sem descrição disponível.</p>
                 )}
-              </div>
-              <div className="bg-accent/40 border border-primary/20 rounded-xl p-6 flex flex-col">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-2">Personalização</p>
-                <h3 className="font-display text-xl mb-3">Sua marca, seu rótulo.</h3>
-                <p className="text-sm text-muted-foreground mb-5">
-                  Rótulo, gravação a laser ou cor especial — a partir de 500 unidades.
-                </p>
-                <button
-                  onClick={handleWhatsApp}
-                  className="mt-auto self-start bg-brand-gradient text-primary-foreground px-5 py-2.5 uppercase tracking-[0.2em] text-xs font-semibold rounded-md hover:opacity-90"
-                >
-                  Solicitar orçamento
-                </button>
               </div>
             </div>
           </TabsContent>
@@ -421,7 +408,7 @@ const ProductDetail = () => {
         <h2 className="font-display text-2xl mb-6">Para quem é este produto</h2>
         <div className="grid md:grid-cols-3 gap-4">
           {[
-            { icon: Sparkles, title: "Marcas indie", desc: "Para envasar cremes, séruns e linhas autorais com acabamento profissional." },
+            { icon: Sparkles, title: "Marcas independentes", desc: "Para envasar cremes, séruns e linhas autorais com acabamento profissional." },
             { icon: Stethoscope, title: "Clínicas e salões", desc: "Entrega de amostras, manipulados e produtos pós-procedimento." },
             { icon: Gift, title: "Brindes corporativos", desc: "Kits personalizados com formulações exclusivas para sua marca." },
           ].map((item) => (
