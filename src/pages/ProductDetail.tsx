@@ -35,12 +35,11 @@ import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511916292626"; // placeholder
 
-const KIT_OPTIONS = [
-  { qty: 1, label: "1 un" },
-  { qty: 25, label: "Kit 25" },
-  { qty: 50, label: "Kit 50" },
-  { qty: 100, label: "Kit 100" },
-];
+// Extract a numeric quantity hint from a variant title (e.g., "Kit 6" -> 6, "1 un" -> 1)
+const parseQtyFromTitle = (title: string): number => {
+  const m = title?.match(/\d+/);
+  return m ? parseInt(m[0], 10) : 1;
+};
 
 const ProductDetail = () => {
   const { handle } = useParams();
@@ -51,16 +50,30 @@ const ProductDetail = () => {
   const setCartOpen = useCartStore((s) => s.setOpen);
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wished = useWishlistStore((s) => (product ? s.ids.includes(product.node.id) : false));
-  const [kitQty, setKitQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
 
   const p = product?.node;
   const images = useMemo(() => p?.images.edges.map((e) => e.node) ?? [], [p]);
   const variants = useMemo(() => p?.variants.edges.map((e) => e.node) ?? [], [p]);
-  const variant = variants[0];
+
+  const kitOptions = useMemo(
+    () =>
+      variants.map((v) => {
+        const qty = parseQtyFromTitle(v.title);
+        const price = parseFloat(v.price.amount);
+        return { variant: v, qty, price, unit: qty > 0 ? price / qty : price, label: v.title };
+      }),
+    [variants]
+  );
+
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+  const selectedOption =
+    kitOptions.find((k) => k.variant.id === selectedVariantId) ?? kitOptions[0];
+  const variant = selectedOption?.variant ?? variants[0];
   const inStock = !!variant?.availableForSale;
-  const unitPrice = parseFloat(variant?.price.amount || p?.priceRange.minVariantPrice.amount || "0");
-  const total = unitPrice * kitQty;
+  const kitQty = selectedOption?.qty ?? 1;
+  const unitPrice = selectedOption?.unit ?? parseFloat(p?.priceRange.minVariantPrice.amount || "0");
+  const total = selectedOption?.price ?? unitPrice * kitQty;
 
   const jsonLd = useMemo(() => {
     if (!p) return null;
@@ -115,10 +128,10 @@ const ProductDetail = () => {
       variantId: variant.id,
       variantTitle: variant.title,
       price: variant.price,
-      quantity: kitQty,
+      quantity: 1,
       selectedOptions: variant.selectedOptions || [],
     });
-    toast.success(`${kitQty}x ${p.title} adicionado`, { position: "top-center" });
+    toast.success(`${variant.title} adicionado`, { position: "top-center" });
   };
 
   const handleBuyNow = async () => {
@@ -241,37 +254,40 @@ const ProductDetail = () => {
             </p>
           )}
 
-          {/* SELETOR DE QUANTIDADE — KITS */}
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
-              Escolha a quantidade
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {KIT_OPTIONS.map((k) => {
-                const selected = kitQty === k.qty;
-                const subtotal = unitPrice * k.qty;
-                return (
-                  <button
-                    key={k.qty}
-                    onClick={() => setKitQty(k.qty)}
-                    className={`text-left p-3 rounded-lg border-2 transition-all ${
-                      selected
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <p className={`text-xs uppercase tracking-wider font-semibold ${selected ? "text-primary" : "text-muted-foreground"}`}>
-                      {k.label}
-                    </p>
-                    <p className="text-base font-bold mt-1">{formatBRL(subtotal)}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
-                      {formatBRL(unitPrice)}/un
-                    </p>
-                  </button>
-                );
-              })}
+          {/* SELETOR DE VARIANTES — KITS */}
+          {kitOptions.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+                Escolha a quantidade
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {kitOptions.map((k) => {
+                  const selected = k.variant.id === variant?.id;
+                  const disabled = !k.variant.availableForSale;
+                  return (
+                    <button
+                      key={k.variant.id}
+                      onClick={() => setSelectedVariantId(k.variant.id)}
+                      disabled={disabled}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${
+                        selected
+                          ? "border-primary bg-primary/5 shadow-sm"
+                          : "border-border hover:border-primary/50"
+                      } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                    >
+                      <p className={`text-xs uppercase tracking-wider font-semibold ${selected ? "text-primary" : "text-muted-foreground"}`}>
+                        {k.label}
+                      </p>
+                      <p className="text-base font-bold mt-1">{formatBRL(k.price)}</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {formatBRL(k.unit)}/un
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* PREÇO + CTAs */}
           <div className="rounded-xl border border-border bg-secondary/20 p-5">
