@@ -254,37 +254,40 @@ const ProductDetail = () => {
             </p>
           )}
 
-          {/* SELETOR DE QUANTIDADE — KITS */}
-          <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
-              Escolha a quantidade
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {KIT_OPTIONS.map((k) => {
-                const selected = kitQty === k.qty;
-                const subtotal = unitPrice * k.qty;
-                return (
-                  <button
-                    key={k.qty}
-                    onClick={() => setKitQty(k.qty)}
-                    className={`text-left p-3 rounded-lg border-2 transition-all ${
-                      selected
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <p className={`text-xs uppercase tracking-wider font-semibold ${selected ? "text-primary" : "text-muted-foreground"}`}>
-                      {k.label}
-                    </p>
-                    <p className="text-base font-bold mt-1">{formatBRL(subtotal)}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">
-                      {formatBRL(unitPrice)}/un
-                    </p>
-                  </button>
-                );
-              })}
+          {/* SELETOR DE VARIANTES — KITS */}
+          {kitOptions.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+                Escolha a quantidade
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {kitOptions.map((k) => {
+                  const selected = k.variant.id === variant?.id;
+                  const disabled = !k.variant.availableForSale;
+                  return (
+                    <button
+                      key={k.variant.id}
+                      onClick={() => setSelectedVariantId(k.variant.id)}
+                      disabled={disabled}
+                      className={`text-left p-3 rounded-lg border-2 transition-all ${
+                        selected
+                          ? "border-primary bg-primary/5 shadow-sm"
+                          : "border-border hover:border-primary/50"
+                      } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
+                    >
+                      <p className={`text-xs uppercase tracking-wider font-semibold ${selected ? "text-primary" : "text-muted-foreground"}`}>
+                        {k.label}
+                      </p>
+                      <p className="text-base font-bold mt-1">{formatBRL(k.price)}</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        {formatBRL(k.unit)}/un
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* PREÇO + CTAs */}
           <div className="rounded-xl border border-border bg-secondary/20 p-5">
