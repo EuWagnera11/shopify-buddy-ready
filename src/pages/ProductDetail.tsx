@@ -50,16 +50,30 @@ const ProductDetail = () => {
   const setCartOpen = useCartStore((s) => s.setOpen);
   const toggleWish = useWishlistStore((s) => s.toggle);
   const wished = useWishlistStore((s) => (product ? s.ids.includes(product.node.id) : false));
-  const [kitQty, setKitQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
 
   const p = product?.node;
   const images = useMemo(() => p?.images.edges.map((e) => e.node) ?? [], [p]);
   const variants = useMemo(() => p?.variants.edges.map((e) => e.node) ?? [], [p]);
-  const variant = variants[0];
+
+  const kitOptions = useMemo(
+    () =>
+      variants.map((v) => {
+        const qty = parseQtyFromTitle(v.title);
+        const price = parseFloat(v.price.amount);
+        return { variant: v, qty, price, unit: qty > 0 ? price / qty : price, label: v.title };
+      }),
+    [variants]
+  );
+
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+  const selectedOption =
+    kitOptions.find((k) => k.variant.id === selectedVariantId) ?? kitOptions[0];
+  const variant = selectedOption?.variant ?? variants[0];
   const inStock = !!variant?.availableForSale;
-  const unitPrice = parseFloat(variant?.price.amount || p?.priceRange.minVariantPrice.amount || "0");
-  const total = unitPrice * kitQty;
+  const kitQty = selectedOption?.qty ?? 1;
+  const unitPrice = selectedOption?.unit ?? parseFloat(p?.priceRange.minVariantPrice.amount || "0");
+  const total = selectedOption?.price ?? unitPrice * kitQty;
 
   const jsonLd = useMemo(() => {
     if (!p) return null;
