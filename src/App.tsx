@@ -14,6 +14,10 @@ import Wishlist from "./pages/Wishlist.tsx";
 import Collections from "./pages/Collections.tsx";
 import Brands from "./pages/Brands.tsx";
 import CollectionPage from "./pages/CollectionPage.tsx";
+import Auth from "./pages/Auth.tsx";
+import Account from "./pages/Account.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
+import { AuthProvider } from "./hooks/useAuth.tsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +35,9 @@ const AppRoutes = () => {
       <Route path="/colecao/:slug" element={<CollectionPage mode="collection" />} />
       <Route path="/marcas" element={<Brands />} />
       <Route path="/marca/:slug" element={<CollectionPage mode="vendor" />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/conta" element={<Account />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
@@ -42,7 +49,9 @@ const App = () => (
       <Toaster />
       <Sonner position="top-center" />
       <BrowserRouter>
-        <AppRoutes />
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
