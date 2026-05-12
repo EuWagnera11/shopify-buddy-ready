@@ -1,8 +1,8 @@
 import { toast } from "sonner";
 
 export const SHOPIFY_API_VERSION = "2025-07";
-export const SHOPIFY_STORE_PERMANENT_DOMAIN = "hhx30c-67.myshopify.com";
-export const SHOPIFY_STOREFRONT_TOKEN = "62fe9c4ca9b2808fde5fb9da4e990238";
+export const SHOPIFY_STORE_PERMANENT_DOMAIN = "4i5kwf-f1.myshopify.com";
+export const SHOPIFY_STOREFRONT_TOKEN = "0458333099ff6591f426f1391c824ce2";
 export const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
 export interface ShopifyImage {
