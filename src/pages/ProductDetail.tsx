@@ -35,12 +35,11 @@ import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511916292626"; // placeholder
 
-const KIT_OPTIONS = [
-  { qty: 1, label: "1 un" },
-  { qty: 25, label: "Kit 25" },
-  { qty: 50, label: "Kit 50" },
-  { qty: 100, label: "Kit 100" },
-];
+// Extract a numeric quantity hint from a variant title (e.g., "Kit 6" -> 6, "1 un" -> 1)
+const parseQtyFromTitle = (title: string): number => {
+  const m = title?.match(/\d+/);
+  return m ? parseInt(m[0], 10) : 1;
+};
 
 const ProductDetail = () => {
   const { handle } = useParams();
