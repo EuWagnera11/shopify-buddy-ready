@@ -273,7 +273,7 @@ const ProductDetail = () => {
         </nav>
       </div>
 
-      <section className="container grid md:grid-cols-2 gap-10 lg:gap-14 py-4 items-start">
+      <section className="container grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-14 py-2 md:py-4 items-start pb-28 md:pb-4">
         {/* GALERIA — sticky */}
         <div className="md:sticky md:top-24">
           <div className="aspect-square bg-secondary/40 overflow-hidden rounded-xl relative">
