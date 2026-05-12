@@ -276,30 +276,69 @@ const ProductDetail = () => {
       <section className="container grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-14 py-2 md:py-4 items-start pb-28 md:pb-4">
         {/* GALERIA — sticky */}
         <div className="md:sticky md:top-24">
-          <div className="aspect-square bg-secondary/40 overflow-hidden rounded-xl relative">
-            {images[imgIdx] && (
-              <img
-                src={shopifyImg(images[imgIdx].url, 1200)}
-                srcSet={shopifySrcSet(images[imgIdx].url, [600, 900, 1200, 1600])}
-                sizes="(min-width:768px) 50vw, 100vw"
-                alt={images[imgIdx].altText || p.title}
-                className="h-full w-full object-contain p-6"
-              />
-            )}
-          </div>
-          {images.length > 1 && (
-            <div className="grid grid-cols-5 gap-2 mt-3">
-              {images.slice(0, 5).map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setImgIdx(i)}
-                  className={`aspect-square bg-secondary/40 rounded-md overflow-hidden border-2 ${imgIdx === i ? "border-primary" : "border-transparent"}`}
-                >
-                  <img src={shopifyImg(img.url, 160)} alt="" className="h-full w-full object-contain p-1" />
-                </button>
+          {/* Mobile: carrossel horizontal com swipe + dots */}
+          <div className="md:hidden -mx-4">
+            <div
+              className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar"
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                const idx = Math.round(el.scrollLeft / el.clientWidth);
+                if (idx !== imgIdx) setImgIdx(idx);
+              }}
+            >
+              {images.map((img, i) => (
+                <div key={i} className="snap-center shrink-0 w-full px-4">
+                  <div className="aspect-square bg-secondary/40 overflow-hidden rounded-xl">
+                    <img
+                      src={shopifyImg(img.url, 1000)}
+                      srcSet={shopifySrcSet(img.url, [600, 900, 1200])}
+                      sizes="100vw"
+                      alt={img.altText || p.title}
+                      className="h-full w-full object-contain p-6"
+                    />
+                  </div>
+                </div>
               ))}
             </div>
-          )}
+            {images.length > 1 && (
+              <div className="flex justify-center gap-1.5 mt-3">
+                {images.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 rounded-full transition-all ${imgIdx === i ? "w-6 bg-primary" : "w-1.5 bg-border"}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Desktop: imagem grande + thumbs */}
+          <div className="hidden md:block">
+            <div className="aspect-square bg-secondary/40 overflow-hidden rounded-xl relative">
+              {images[imgIdx] && (
+                <img
+                  src={shopifyImg(images[imgIdx].url, 1200)}
+                  srcSet={shopifySrcSet(images[imgIdx].url, [600, 900, 1200, 1600])}
+                  sizes="50vw"
+                  alt={images[imgIdx].altText || p.title}
+                  className="h-full w-full object-contain p-6"
+                />
+              )}
+            </div>
+            {images.length > 1 && (
+              <div className="grid grid-cols-5 gap-2 mt-3">
+                {images.slice(0, 5).map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setImgIdx(i)}
+                    className={`aspect-square bg-secondary/40 rounded-md overflow-hidden border-2 ${imgIdx === i ? "border-primary" : "border-transparent"}`}
+                  >
+                    <img src={shopifyImg(img.url, 160)} alt="" className="h-full w-full object-contain p-1" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* COLUNA DE COMPRA */}
