@@ -263,8 +263,8 @@ const ProductDetail = () => {
 
   return (
     <Layout>
-      <div className="container py-6">
-        <nav className="text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+      <div className="container py-3 md:py-6">
+        <nav className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
           <Link to="/" className="hover:text-primary">Início</Link>
           <ChevronRight className="h-3 w-3" />
           <Link to="/produtos" className="hover:text-primary">Coleção</Link>
@@ -273,7 +273,7 @@ const ProductDetail = () => {
         </nav>
       </div>
 
-      <section className="container grid md:grid-cols-2 gap-10 lg:gap-14 py-4 items-start">
+      <section className="container grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-14 py-2 md:py-4 items-start pb-28 md:pb-4">
         {/* GALERIA — sticky */}
         <div className="md:sticky md:top-24">
           <div className="aspect-square bg-secondary/40 overflow-hidden rounded-xl relative">
@@ -303,14 +303,14 @@ const ProductDetail = () => {
         </div>
 
         {/* COLUNA DE COMPRA */}
-        <div className="md:py-2 space-y-6">
+        <div className="md:py-2 space-y-4 md:space-y-6">
           {/* CABEÇALHO */}
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
+            <p className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-muted-foreground mb-2 md:mb-3">
               Vendido por Gold Embalagens
             </p>
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <h1 className="font-display text-3xl md:text-4xl leading-tight">{p.title}</h1>
+            <div className="flex items-start justify-between gap-3 mb-2 md:mb-3">
+              <h1 className="font-display text-2xl md:text-4xl leading-tight">{p.title}</h1>
               <div className="flex items-center gap-2 shrink-0">
                 <button onClick={() => toggleWish(p.id)} aria-label="Favoritar" className="h-10 w-10 flex items-center justify-center border border-border rounded-full hover:border-primary">
                   <Heart className={`h-4 w-4 ${wished ? "fill-primary text-primary" : ""}`} />
@@ -407,9 +407,9 @@ const ProductDetail = () => {
           )}
 
           {/* PREÇO + CTAs */}
-          <div className="rounded-xl border border-border bg-secondary/20 p-5">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-3xl text-primary font-medium">{formatBRL(total)}</span>
+          <div className="rounded-xl border border-border bg-secondary/20 p-4 md:p-5">
+            <div className="flex items-baseline gap-3 mb-3 md:mb-4">
+              <span className="text-2xl md:text-3xl text-primary font-medium">{formatBRL(total)}</span>
               <span className="text-xs text-muted-foreground">total · {kitQty} un</span>
             </div>
 
@@ -588,20 +588,21 @@ const ProductDetail = () => {
 
       {/* MOBILE STICKY BUY BAR */}
       {inStock && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border p-3 shadow-elevated">
-          <div className="flex items-center gap-2">
-            <div className="flex-1">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{kitQty} un</p>
-              <p className="text-base font-bold text-primary">{formatBRL(total)}</p>
-            </div>
-            <button
-              onClick={handleBuyNow}
-              disabled={adding}
-              className="flex-[2] bg-brand-gradient text-primary-foreground py-3 px-4 uppercase tracking-[0.15em] text-xs font-semibold rounded-md"
-            >
-              {adding ? <Loader2 className="h-4 w-4 animate-spin inline" /> : "Comprar agora"}
-            </button>
+        <div
+          className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border px-3 pt-2 shadow-elevated"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
+        >
+          <div className="flex items-baseline justify-between mb-2 px-1">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{kitQty} un · total</p>
+            <p className="text-base font-bold text-primary">{formatBRL(total)}</p>
           </div>
+          <button
+            onClick={handleBuyNow}
+            disabled={adding}
+            className="w-full min-h-[52px] bg-brand-gradient text-primary-foreground py-3 px-4 uppercase tracking-[0.15em] text-sm font-semibold rounded-md flex items-center justify-center"
+          >
+            {adding ? <Loader2 className="h-5 w-5 animate-spin" /> : `Comprar agora — ${formatBRL(total)}`}
+          </button>
         </div>
       )}
     </Layout>
