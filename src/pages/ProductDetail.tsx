@@ -91,24 +91,73 @@ const ProductDetail = () => {
   const images = useMemo(() => p?.images.edges.map((e) => e.node) ?? [], [p]);
   const variants = useMemo(() => p?.variants.edges.map((e) => e.node) ?? [], [p]);
 
-  const kitOptions = useMemo(
+  const parsedVariants = useMemo(
     () =>
       variants.map((v) => {
-        const qty = parseQtyFromTitle(v.title);
+        const { qty, color, qtyLabel } = parseVariantTitle(v.title);
         const price = parseFloat(v.price.amount);
-        return { variant: v, qty, price, unit: qty > 0 ? price / qty : price, label: v.title };
+        return {
+          variant: v,
+          qty,
+          color,
+          qtyLabel,
+          price,
+          unit: qty > 0 ? price / qty : price,
+        };
       }),
     [variants]
   );
 
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
-  const selectedOption =
-    kitOptions.find((k) => k.variant.id === selectedVariantId) ?? kitOptions[0];
-  const variant = selectedOption?.variant ?? variants[0];
+  // Distinct quantities and colors (preserve first-seen order)
+  const quantities = useMemo(() => {
+    const seen = new Map<number, string>();
+    parsedVariants.forEach((p) => {
+      if (!seen.has(p.qty)) seen.set(p.qty, p.qtyLabel);
+    });
+    return Array.from(seen.entries()).map(([qty, label]) => ({ qty, label }));
+  }, [parsedVariants]);
+
+  const colors = useMemo(() => {
+    const set = new Set<string>();
+    parsedVariants.forEach((p) => {
+      if (p.color) set.add(p.color);
+    });
+    return Array.from(set);
+  }, [parsedVariants]);
+
+  const [selectedQty, setSelectedQty] = useState<number | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  // Initialize defaults once we know the variants
+  const defaultQty = quantities[0]?.qty ?? null;
+  const defaultColor = colors[0] ?? null;
+  const activeQty = selectedQty ?? defaultQty;
+  const activeColor = selectedColor ?? defaultColor;
+
+  const matched = useMemo(() => {
+    if (activeQty == null) return parsedVariants[0];
+    return (
+      parsedVariants.find(
+        (p) => p.qty === activeQty && (colors.length === 0 || p.color === activeColor)
+      ) ??
+      parsedVariants.find((p) => p.qty === activeQty) ??
+      parsedVariants[0]
+    );
+  }, [parsedVariants, activeQty, activeColor, colors.length]);
+
+  const variant = matched?.variant ?? variants[0];
   const inStock = !!variant?.availableForSale;
-  const kitQty = selectedOption?.qty ?? 1;
-  const unitPrice = selectedOption?.unit ?? parseFloat(p?.priceRange.minVariantPrice.amount || "0");
-  const total = selectedOption?.price ?? unitPrice * kitQty;
+  const kitQty = matched?.qty ?? 1;
+  const unitPrice = matched?.unit ?? parseFloat(p?.priceRange.minVariantPrice.amount || "0");
+  const total = matched?.price ?? unitPrice * kitQty;
+
+  // Helper: which colors are available for the active qty
+  const colorAvailableForQty = (color: string) =>
+    parsedVariants.some((p) => p.qty === activeQty && p.color === color && p.variant.availableForSale);
+  const qtyAvailableForColor = (qty: number) =>
+    colors.length === 0
+      ? parsedVariants.some((p) => p.qty === qty && p.variant.availableForSale)
+      : parsedVariants.some((p) => p.qty === qty && p.color === activeColor && p.variant.availableForSale);
 
   const jsonLd = useMemo(() => {
     if (!p) return null;
