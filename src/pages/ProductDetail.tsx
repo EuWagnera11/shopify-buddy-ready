@@ -128,10 +128,10 @@ const ProductDetail = () => {
       variantId: variant.id,
       variantTitle: variant.title,
       price: variant.price,
-      quantity: kitQty,
+      quantity: 1,
       selectedOptions: variant.selectedOptions || [],
     });
-    toast.success(`${kitQty}x ${p.title} adicionado`, { position: "top-center" });
+    toast.success(`${variant.title} adicionado`, { position: "top-center" });
   };
 
   const handleBuyNow = async () => {
