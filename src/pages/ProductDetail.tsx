@@ -303,14 +303,14 @@ const ProductDetail = () => {
         </div>
 
         {/* COLUNA DE COMPRA */}
-        <div className="md:py-2 space-y-6">
+        <div className="md:py-2 space-y-4 md:space-y-6">
           {/* CABEÇALHO */}
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-3">
+            <p className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-muted-foreground mb-2 md:mb-3">
               Vendido por Gold Embalagens
             </p>
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <h1 className="font-display text-3xl md:text-4xl leading-tight">{p.title}</h1>
+            <div className="flex items-start justify-between gap-3 mb-2 md:mb-3">
+              <h1 className="font-display text-2xl md:text-4xl leading-tight">{p.title}</h1>
               <div className="flex items-center gap-2 shrink-0">
                 <button onClick={() => toggleWish(p.id)} aria-label="Favoritar" className="h-10 w-10 flex items-center justify-center border border-border rounded-full hover:border-primary">
                   <Heart className={`h-4 w-4 ${wished ? "fill-primary text-primary" : ""}`} />
