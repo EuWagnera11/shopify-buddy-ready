@@ -35,11 +35,46 @@ import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511916292626"; // placeholder
 
-// Extract a numeric quantity hint from a variant title (e.g., "Kit 6" -> 6, "1 un" -> 1)
+// Parse a Shopify variant title like "6 unidades branco" -> { qty: 6, color: "branco" }
 const parseQtyFromTitle = (title: string): number => {
   const m = title?.match(/\d+/);
   return m ? parseInt(m[0], 10) : 1;
 };
+
+const KNOWN_COLORS = [
+  "branco", "preto", "transparente", "âmbar", "ambar", "fosco", "translúcido", "translucido",
+  "dourado", "prateado", "rosé", "rose", "azul", "verde", "vermelho", "rosa", "natural", "cristal",
+];
+
+const stripAccents = (s: string) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+const parseVariantTitle = (title: string): { qty: number; color: string | null; qtyLabel: string } => {
+  const raw = (title || "").trim();
+  // Quantity: number followed (optionally) by "un", "unidade(s)", "kit"
+  const qtyMatch = raw.match(/(\d+)\s*(unidades?|un\b|uni\b|kit)?/i);
+  const qty = qtyMatch ? parseInt(qtyMatch[1], 10) : 1;
+  const qtyLabel = qtyMatch ? qtyMatch[0].trim() : `${qty}`;
+
+  const norm = stripAccents(raw);
+  const found = KNOWN_COLORS.find((c) => {
+    const cn = stripAccents(c);
+    return new RegExp(`\\b${cn}\\b`).test(norm);
+  });
+  let color: string | null = found ?? null;
+
+  if (!color) {
+    // Fallback: take last word that's not a number/unit
+    const tokens = raw
+      .replace(/[\/|,;]/g, " ")
+      .split(/\s+/)
+      .filter((t) => t && !/^\d+$/.test(t) && !/^(unidades?|un|uni|kit)$/i.test(t));
+    if (tokens.length) color = tokens[tokens.length - 1].toLowerCase();
+  }
+  return { qty, color, qtyLabel: qtyLabel.replace(/\s+/g, " ") };
+};
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const ProductDetail = () => {
   const { handle } = useParams();
@@ -56,24 +91,73 @@ const ProductDetail = () => {
   const images = useMemo(() => p?.images.edges.map((e) => e.node) ?? [], [p]);
   const variants = useMemo(() => p?.variants.edges.map((e) => e.node) ?? [], [p]);
 
-  const kitOptions = useMemo(
+  const parsedVariants = useMemo(
     () =>
       variants.map((v) => {
-        const qty = parseQtyFromTitle(v.title);
+        const { qty, color, qtyLabel } = parseVariantTitle(v.title);
         const price = parseFloat(v.price.amount);
-        return { variant: v, qty, price, unit: qty > 0 ? price / qty : price, label: v.title };
+        return {
+          variant: v,
+          qty,
+          color,
+          qtyLabel,
+          price,
+          unit: qty > 0 ? price / qty : price,
+        };
       }),
     [variants]
   );
 
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
-  const selectedOption =
-    kitOptions.find((k) => k.variant.id === selectedVariantId) ?? kitOptions[0];
-  const variant = selectedOption?.variant ?? variants[0];
+  // Distinct quantities and colors (preserve first-seen order)
+  const quantities = useMemo(() => {
+    const seen = new Map<number, string>();
+    parsedVariants.forEach((p) => {
+      if (!seen.has(p.qty)) seen.set(p.qty, p.qtyLabel);
+    });
+    return Array.from(seen.entries()).map(([qty, label]) => ({ qty, label }));
+  }, [parsedVariants]);
+
+  const colors = useMemo(() => {
+    const set = new Set<string>();
+    parsedVariants.forEach((p) => {
+      if (p.color) set.add(p.color);
+    });
+    return Array.from(set);
+  }, [parsedVariants]);
+
+  const [selectedQty, setSelectedQty] = useState<number | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+
+  // Initialize defaults once we know the variants
+  const defaultQty = quantities[0]?.qty ?? null;
+  const defaultColor = colors[0] ?? null;
+  const activeQty = selectedQty ?? defaultQty;
+  const activeColor = selectedColor ?? defaultColor;
+
+  const matched = useMemo(() => {
+    if (activeQty == null) return parsedVariants[0];
+    return (
+      parsedVariants.find(
+        (p) => p.qty === activeQty && (colors.length === 0 || p.color === activeColor)
+      ) ??
+      parsedVariants.find((p) => p.qty === activeQty) ??
+      parsedVariants[0]
+    );
+  }, [parsedVariants, activeQty, activeColor, colors.length]);
+
+  const variant = matched?.variant ?? variants[0];
   const inStock = !!variant?.availableForSale;
-  const kitQty = selectedOption?.qty ?? 1;
-  const unitPrice = selectedOption?.unit ?? parseFloat(p?.priceRange.minVariantPrice.amount || "0");
-  const total = selectedOption?.price ?? unitPrice * kitQty;
+  const kitQty = matched?.qty ?? 1;
+  const unitPrice = matched?.unit ?? parseFloat(p?.priceRange.minVariantPrice.amount || "0");
+  const total = matched?.price ?? unitPrice * kitQty;
+
+  // Helper: which colors are available for the active qty
+  const colorAvailableForQty = (color: string) =>
+    parsedVariants.some((p) => p.qty === activeQty && p.color === color && p.variant.availableForSale);
+  const qtyAvailableForColor = (qty: number) =>
+    colors.length === 0
+      ? parsedVariants.some((p) => p.qty === qty && p.variant.availableForSale)
+      : parsedVariants.some((p) => p.qty === qty && p.color === activeColor && p.variant.availableForSale);
 
   const jsonLd = useMemo(() => {
     if (!p) return null;
@@ -254,20 +338,24 @@ const ProductDetail = () => {
             </p>
           )}
 
-          {/* SELETOR DE VARIANTES — KITS */}
-          {kitOptions.length > 0 && (
+          {/* SELETOR DE QUANTIDADE */}
+          {quantities.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
                 Escolha a quantidade
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {kitOptions.map((k) => {
-                  const selected = k.variant.id === variant?.id;
-                  const disabled = !k.variant.availableForSale;
+                {quantities.map((q) => {
+                  const selected = q.qty === activeQty;
+                  const disabled = !qtyAvailableForColor(q.qty);
+                  const repr =
+                    parsedVariants.find(
+                      (pp) => pp.qty === q.qty && (colors.length === 0 || pp.color === activeColor)
+                    ) ?? parsedVariants.find((pp) => pp.qty === q.qty)!;
                   return (
                     <button
-                      key={k.variant.id}
-                      onClick={() => setSelectedVariantId(k.variant.id)}
+                      key={q.qty}
+                      onClick={() => setSelectedQty(q.qty)}
                       disabled={disabled}
                       className={`text-left p-3 rounded-lg border-2 transition-all ${
                         selected
@@ -276,12 +364,41 @@ const ProductDetail = () => {
                       } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
                     >
                       <p className={`text-xs uppercase tracking-wider font-semibold ${selected ? "text-primary" : "text-muted-foreground"}`}>
-                        {k.label}
+                        {q.qty} un
                       </p>
-                      <p className="text-base font-bold mt-1">{formatBRL(k.price)}</p>
+                      <p className="text-base font-bold mt-1">{formatBRL(repr.price)}</p>
                       <p className="text-[11px] text-muted-foreground mt-0.5">
-                        {formatBRL(k.unit)}/un
+                        {formatBRL(repr.unit)}/un
                       </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* SELETOR DE COR */}
+          {colors.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+                Cor: <span className="text-foreground font-medium normal-case tracking-normal">{cap(activeColor || "")}</span>
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {colors.map((c) => {
+                  const selected = c === activeColor;
+                  const disabled = !colorAvailableForQty(c);
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => setSelectedColor(c)}
+                      disabled={disabled}
+                      className={`px-4 py-2 rounded-full border-2 text-xs uppercase tracking-wider font-semibold transition-all ${
+                        selected
+                          ? "border-primary bg-primary/5 text-primary"
+                          : "border-border hover:border-primary/50 text-muted-foreground"
+                      } ${disabled ? "opacity-40 cursor-not-allowed line-through" : ""}`}
+                    >
+                      {cap(c)}
                     </button>
                   );
                 })}
