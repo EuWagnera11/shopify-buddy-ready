@@ -70,7 +70,7 @@ export const Header = () => {
             </div>
           </Link>
           <Link
-            to="/contato"
+            to="/conta"
             className="hidden md:flex items-center gap-2 px-3 py-2 rounded-md hover:bg-secondary transition-colors text-sm"
           >
             <User className="h-5 w-5 text-primary" />
