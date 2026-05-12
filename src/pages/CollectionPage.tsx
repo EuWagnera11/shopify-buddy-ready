@@ -20,11 +20,17 @@ const CollectionPage = ({ mode }: Props) => {
   const { items, label } = useMemo(() => {
     if (!slug) return { items: [], label: "" };
     const filtered = products.filter((p) => {
-      const key = mode === "vendor" ? p.node.vendor : p.node.productType;
+      const key =
+        mode === "vendor"
+          ? p.node.vendor
+          : p.node.productType?.trim() || p.node.vendor;
       return key && slugify(key) === slug;
     });
     const label =
-      filtered[0]?.node[mode === "vendor" ? "vendor" : "productType"] || slug.replace(/-/g, " ");
+      (mode === "vendor"
+        ? filtered[0]?.node.vendor
+        : filtered[0]?.node.productType?.trim() || filtered[0]?.node.vendor) ||
+      slug.replace(/-/g, " ");
     return { items: filtered, label };
   }, [products, slug, mode]);
 
