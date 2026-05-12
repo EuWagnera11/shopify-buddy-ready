@@ -35,11 +35,46 @@ import { findCopy } from "@/lib/productCopies";
 
 const WHATSAPP_NUMBER = "5511916292626"; // placeholder
 
-// Extract a numeric quantity hint from a variant title (e.g., "Kit 6" -> 6, "1 un" -> 1)
+// Parse a Shopify variant title like "6 unidades branco" -> { qty: 6, color: "branco" }
 const parseQtyFromTitle = (title: string): number => {
   const m = title?.match(/\d+/);
   return m ? parseInt(m[0], 10) : 1;
 };
+
+const KNOWN_COLORS = [
+  "branco", "preto", "transparente", "âmbar", "ambar", "fosco", "translúcido", "translucido",
+  "dourado", "prateado", "rosé", "rose", "azul", "verde", "vermelho", "rosa", "natural", "cristal",
+];
+
+const stripAccents = (s: string) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+const parseVariantTitle = (title: string): { qty: number; color: string | null; qtyLabel: string } => {
+  const raw = (title || "").trim();
+  // Quantity: number followed (optionally) by "un", "unidade(s)", "kit"
+  const qtyMatch = raw.match(/(\d+)\s*(unidades?|un\b|uni\b|kit)?/i);
+  const qty = qtyMatch ? parseInt(qtyMatch[1], 10) : 1;
+  const qtyLabel = qtyMatch ? qtyMatch[0].trim() : `${qty}`;
+
+  const norm = stripAccents(raw);
+  const found = KNOWN_COLORS.find((c) => {
+    const cn = stripAccents(c);
+    return new RegExp(`\\b${cn}\\b`).test(norm);
+  });
+  let color: string | null = found ?? null;
+
+  if (!color) {
+    // Fallback: take last word that's not a number/unit
+    const tokens = raw
+      .replace(/[\/|,;]/g, " ")
+      .split(/\s+/)
+      .filter((t) => t && !/^\d+$/.test(t) && !/^(unidades?|un|uni|kit)$/i.test(t));
+    if (tokens.length) color = tokens[tokens.length - 1].toLowerCase();
+  }
+  return { qty, color, qtyLabel: qtyLabel.replace(/\s+/g, " ") };
+};
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 const ProductDetail = () => {
   const { handle } = useParams();
