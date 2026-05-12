@@ -588,20 +588,21 @@ const ProductDetail = () => {
 
       {/* MOBILE STICKY BUY BAR */}
       {inStock && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border p-3 shadow-elevated">
-          <div className="flex items-center gap-2">
-            <div className="flex-1">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{kitQty} un</p>
-              <p className="text-base font-bold text-primary">{formatBRL(total)}</p>
-            </div>
-            <button
-              onClick={handleBuyNow}
-              disabled={adding}
-              className="flex-[2] bg-brand-gradient text-primary-foreground py-3 px-4 uppercase tracking-[0.15em] text-xs font-semibold rounded-md"
-            >
-              {adding ? <Loader2 className="h-4 w-4 animate-spin inline" /> : "Comprar agora"}
-            </button>
+        <div
+          className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border px-3 pt-2 shadow-elevated"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
+        >
+          <div className="flex items-baseline justify-between mb-2 px-1">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{kitQty} un · total</p>
+            <p className="text-base font-bold text-primary">{formatBRL(total)}</p>
           </div>
+          <button
+            onClick={handleBuyNow}
+            disabled={adding}
+            className="w-full min-h-[52px] bg-brand-gradient text-primary-foreground py-3 px-4 uppercase tracking-[0.15em] text-sm font-semibold rounded-md flex items-center justify-center"
+          >
+            {adding ? <Loader2 className="h-5 w-5 animate-spin" /> : `Comprar agora — ${formatBRL(total)}`}
+          </button>
         </div>
       )}
     </Layout>
