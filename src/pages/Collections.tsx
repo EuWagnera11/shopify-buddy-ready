@@ -18,7 +18,7 @@ const Collections = () => {
   const groups = useMemo(() => {
     const map = new Map<string, { count: number; image?: string }>();
     products.forEach((p) => {
-      const type = p.node.productType;
+      const type = p.node.productType?.trim() || p.node.vendor?.trim();
       if (!type) return;
       const cur = map.get(type) || { count: 0, image: p.node.images.edges[0]?.node.url };
       map.set(type, { count: cur.count + 1, image: cur.image || p.node.images.edges[0]?.node.url });
