@@ -263,8 +263,8 @@ const ProductDetail = () => {
 
   return (
     <Layout>
-      <div className="container py-6">
-        <nav className="text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+      <div className="container py-3 md:py-6">
+        <nav className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
           <Link to="/" className="hover:text-primary">Início</Link>
           <ChevronRight className="h-3 w-3" />
           <Link to="/produtos" className="hover:text-primary">Coleção</Link>
