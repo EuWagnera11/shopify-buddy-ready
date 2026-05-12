@@ -407,9 +407,9 @@ const ProductDetail = () => {
           )}
 
           {/* PREÇO + CTAs */}
-          <div className="rounded-xl border border-border bg-secondary/20 p-5">
-            <div className="flex items-baseline gap-3 mb-4">
-              <span className="text-3xl text-primary font-medium">{formatBRL(total)}</span>
+          <div className="rounded-xl border border-border bg-secondary/20 p-4 md:p-5">
+            <div className="flex items-baseline gap-3 mb-3 md:mb-4">
+              <span className="text-2xl md:text-3xl text-primary font-medium">{formatBRL(total)}</span>
               <span className="text-xs text-muted-foreground">total · {kitQty} un</span>
             </div>
 
