@@ -338,20 +338,24 @@ const ProductDetail = () => {
             </p>
           )}
 
-          {/* SELETOR DE VARIANTES — KITS */}
-          {kitOptions.length > 0 && (
+          {/* SELETOR DE QUANTIDADE */}
+          {quantities.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
                 Escolha a quantidade
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {kitOptions.map((k) => {
-                  const selected = k.variant.id === variant?.id;
-                  const disabled = !k.variant.availableForSale;
+                {quantities.map((q) => {
+                  const selected = q.qty === activeQty;
+                  const disabled = !qtyAvailableForColor(q.qty);
+                  const repr =
+                    parsedVariants.find(
+                      (pp) => pp.qty === q.qty && (colors.length === 0 || pp.color === activeColor)
+                    ) ?? parsedVariants.find((pp) => pp.qty === q.qty)!;
                   return (
                     <button
-                      key={k.variant.id}
-                      onClick={() => setSelectedVariantId(k.variant.id)}
+                      key={q.qty}
+                      onClick={() => setSelectedQty(q.qty)}
                       disabled={disabled}
                       className={`text-left p-3 rounded-lg border-2 transition-all ${
                         selected
@@ -360,12 +364,41 @@ const ProductDetail = () => {
                       } ${disabled ? "opacity-40 cursor-not-allowed" : ""}`}
                     >
                       <p className={`text-xs uppercase tracking-wider font-semibold ${selected ? "text-primary" : "text-muted-foreground"}`}>
-                        {k.label}
+                        {q.qty} un
                       </p>
-                      <p className="text-base font-bold mt-1">{formatBRL(k.price)}</p>
+                      <p className="text-base font-bold mt-1">{formatBRL(repr.price)}</p>
                       <p className="text-[11px] text-muted-foreground mt-0.5">
-                        {formatBRL(k.unit)}/un
+                        {formatBRL(repr.unit)}/un
                       </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* SELETOR DE COR */}
+          {colors.length > 0 && (
+            <div>
+              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+                Cor: <span className="text-foreground font-medium normal-case tracking-normal">{cap(activeColor || "")}</span>
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {colors.map((c) => {
+                  const selected = c === activeColor;
+                  const disabled = !colorAvailableForQty(c);
+                  return (
+                    <button
+                      key={c}
+                      onClick={() => setSelectedColor(c)}
+                      disabled={disabled}
+                      className={`px-4 py-2 rounded-full border-2 text-xs uppercase tracking-wider font-semibold transition-all ${
+                        selected
+                          ? "border-primary bg-primary/5 text-primary"
+                          : "border-border hover:border-primary/50 text-muted-foreground"
+                      } ${disabled ? "opacity-40 cursor-not-allowed line-through" : ""}`}
+                    >
+                      {cap(c)}
                     </button>
                   );
                 })}
