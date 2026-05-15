@@ -128,7 +128,7 @@ export const CartDrawer = () => {
                 ) : (
                   <>
                     <ExternalLink className="h-4 w-4" />
-                    Finalizar no Shopify
+                    Finalizar compra
                   </>
                 )}
               </button>
