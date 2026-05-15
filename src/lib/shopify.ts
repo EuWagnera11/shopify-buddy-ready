@@ -120,6 +120,7 @@ export interface ShopifyCollection {
   description: string;
   image: { url: string; altText: string | null } | null;
   productsCount?: number;
+  fallbackImage?: { url: string; altText: string | null } | null;
 }
 
 const COLLECTIONS_QUERY = `
@@ -132,7 +133,14 @@ const COLLECTIONS_QUERY = `
           handle
           description
           image { url altText }
-          products(first: 1) { edges { node { id } } }
+          products(first: 1) {
+            edges {
+              node {
+                featuredImage { url altText }
+                images(first: 1) { edges { node { url altText } } }
+              }
+            }
+          }
         }
       }
     }
