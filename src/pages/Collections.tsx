@@ -29,33 +29,40 @@ const Collections = () => {
           <p className="text-center text-muted-foreground py-24">Nenhuma coleção encontrada</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {collections.map((c) => (
-              <Link
-                key={c.id}
-                to={`/colecao/${c.handle}`}
-                className="group relative overflow-hidden rounded-xl bg-secondary/40 border border-border hover:border-primary/50 hover:shadow-elevated transition-all"
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  {c.image?.url && (
-                    <img
-                      src={shopifyImg(c.image.url, 600)}
-                      alt={c.image.altText || c.title}
-                      loading="eager"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  )}
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur p-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-display text-xl">{c.title}</h3>
-                    {c.description && (
-                      <p className="text-xs text-muted-foreground line-clamp-1">{c.description}</p>
+            {collections.map((c) => {
+              const cover = c.image || c.fallbackImage;
+              return (
+                <Link
+                  key={c.id}
+                  to={`/colecao/${c.handle}`}
+                  className="group relative overflow-hidden rounded-xl bg-secondary/40 border border-border hover:border-primary/50 hover:shadow-elevated transition-all"
+                >
+                  <div className="aspect-[4/3] overflow-hidden bg-secondary/40">
+                    {cover?.url ? (
+                      <img
+                        src={shopifyImg(cover.url, 600)}
+                        alt={cover.altText || c.title}
+                        loading="eager"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center text-muted-foreground text-xs uppercase tracking-widest">
+                        {c.title}
+                      </div>
                     )}
                   </div>
-                  <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
-                </div>
-              </Link>
-            ))}
+                  <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur p-4 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-display text-xl">{c.title}</h3>
+                      {c.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-1">{c.description}</p>
+                      )}
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>
