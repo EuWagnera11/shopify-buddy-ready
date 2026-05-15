@@ -165,13 +165,21 @@ const COLLECTION_BY_HANDLE_QUERY = `
 export async function fetchCollections(first = 50): Promise<ShopifyCollection[]> {
   const data = await storefrontApiRequest(COLLECTIONS_QUERY, { first });
   const edges = data?.data?.collections?.edges ?? [];
-  return edges.map((e: any) => ({
-    id: e.node.id,
-    title: e.node.title,
-    handle: e.node.handle,
-    description: e.node.description,
-    image: e.node.image,
-  }));
+  return edges.map((e: any) => {
+    const firstProduct = e.node.products?.edges?.[0]?.node;
+    const fallback =
+      firstProduct?.featuredImage ||
+      firstProduct?.images?.edges?.[0]?.node ||
+      null;
+    return {
+      id: e.node.id,
+      title: e.node.title,
+      handle: e.node.handle,
+      description: e.node.description,
+      image: e.node.image,
+      fallbackImage: fallback,
+    };
+  });
 }
 
 export async function fetchCollectionByHandle(
