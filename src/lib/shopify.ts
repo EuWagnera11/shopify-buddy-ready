@@ -111,6 +111,80 @@ export async function fetchProductByHandle(handle: string): Promise<ShopifyProdu
   return node ? { node } : null;
 }
 
+// ============ COLLECTIONS ============
+
+export interface ShopifyCollection {
+  id: string;
+  title: string;
+  handle: string;
+  description: string;
+  image: { url: string; altText: string | null } | null;
+  productsCount?: number;
+}
+
+const COLLECTIONS_QUERY = `
+  query GetCollections($first: Int!) {
+    collections(first: $first) {
+      edges {
+        node {
+          id
+          title
+          handle
+          description
+          image { url altText }
+          products(first: 1) { edges { node { id } } }
+        }
+      }
+    }
+  }
+`;
+
+const COLLECTION_BY_HANDLE_QUERY = `
+  query GetCollection($handle: String!, $first: Int!) {
+    collection(handle: $handle) {
+      id
+      title
+      handle
+      description
+      image { url altText }
+      products(first: $first) {
+        edges { node { ${PRODUCT_FRAGMENT} } }
+      }
+    }
+  }
+`;
+
+export async function fetchCollections(first = 50): Promise<ShopifyCollection[]> {
+  const data = await storefrontApiRequest(COLLECTIONS_QUERY, { first });
+  const edges = data?.data?.collections?.edges ?? [];
+  return edges.map((e: any) => ({
+    id: e.node.id,
+    title: e.node.title,
+    handle: e.node.handle,
+    description: e.node.description,
+    image: e.node.image,
+  }));
+}
+
+export async function fetchCollectionByHandle(
+  handle: string,
+  first = 50,
+): Promise<{ collection: ShopifyCollection; products: ShopifyProduct[] } | null> {
+  const data = await storefrontApiRequest(COLLECTION_BY_HANDLE_QUERY, { handle, first });
+  const node = data?.data?.collection;
+  if (!node) return null;
+  return {
+    collection: {
+      id: node.id,
+      title: node.title,
+      handle: node.handle,
+      description: node.description,
+      image: node.image,
+    },
+    products: node.products.edges,
+  };
+}
+
 // ============ CART ============
 
 export const CART_QUERY = `
