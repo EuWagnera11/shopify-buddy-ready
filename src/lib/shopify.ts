@@ -120,6 +120,7 @@ export interface ShopifyCollection {
   description: string;
   image: { url: string; altText: string | null } | null;
   productsCount?: number;
+  fallbackImage?: { url: string; altText: string | null } | null;
 }
 
 const COLLECTIONS_QUERY = `
@@ -132,7 +133,14 @@ const COLLECTIONS_QUERY = `
           handle
           description
           image { url altText }
-          products(first: 1) { edges { node { id } } }
+          products(first: 1) {
+            edges {
+              node {
+                featuredImage { url altText }
+                images(first: 1) { edges { node { url altText } } }
+              }
+            }
+          }
         }
       }
     }
@@ -157,13 +165,21 @@ const COLLECTION_BY_HANDLE_QUERY = `
 export async function fetchCollections(first = 50): Promise<ShopifyCollection[]> {
   const data = await storefrontApiRequest(COLLECTIONS_QUERY, { first });
   const edges = data?.data?.collections?.edges ?? [];
-  return edges.map((e: any) => ({
-    id: e.node.id,
-    title: e.node.title,
-    handle: e.node.handle,
-    description: e.node.description,
-    image: e.node.image,
-  }));
+  return edges.map((e: any) => {
+    const firstProduct = e.node.products?.edges?.[0]?.node;
+    const fallback =
+      firstProduct?.featuredImage ||
+      firstProduct?.images?.edges?.[0]?.node ||
+      null;
+    return {
+      id: e.node.id,
+      title: e.node.title,
+      handle: e.node.handle,
+      description: e.node.description,
+      image: e.node.image,
+      fallbackImage: fallback,
+    };
+  });
 }
 
 export async function fetchCollectionByHandle(
